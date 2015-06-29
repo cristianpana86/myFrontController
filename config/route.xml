@@ -1,0 +1,50 @@
+<route_base>
+   <route name="home page">
+       <path>/</path>
+	   <controllerClass>Home</controllerClass>
+	   <action>render</action>
+	</route>
+	
+	<route name="blog page">
+       <path>/blog</path>
+	   <controllerClass>Blog</controllerClass>
+	   <action>render</action>
+	</route>
+	
+	<route name="admin_login_page">
+       <path>/admin</path>
+	   <controllerClass>Admin</controllerClass>
+	   <action>renderLogin</action>
+	</route>
+	
+	<route name="admin_login_page">
+       <path>/admin/</path>
+	   <controllerClass>Admin</controllerClass>
+	   <action>renderLogin</action>
+	</route>
+	
+	<route name="admin_home_page">
+       <path>/admin/home</path>
+	   <controllerClass>Admin</controllerClass>
+	   <action>renderAdminHome</action>
+	</route>
+	
+	<route name="admin_new_post">
+		<path>/admin/new-post</path>
+	   <controllerClass>Blog</controllerClass>
+	   <action>new_post_entry</action>
+	</route>
+	
+	<route name="admin_log_out">
+		<path>/admin/logout</path>
+	   <controllerClass>Admin</controllerClass>
+	   <action>logOut</action>
+	</route>
+	<route name="admin_post_on_blog">
+		<path>/admin/postOnBlog</path>
+	   <controllerClass>Blog</controllerClass>
+	   <action>postOnBlog</action>
+	</route>
+	
+	
+</route_base>
