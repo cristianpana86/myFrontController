@@ -10,13 +10,49 @@ class BlogModel{
 	
 	public function __construct(){
 	
-	    //require_once 'DBCon.class.php';
+	    $path_to_xml=__DIR__ . '\\pagination.xml';
+		$xml=simplexml_load_file($path_to_xml) or die("Error: Cannot create object");
+		$this->page_number = (integer)$xml->page_number;
+		$this->per_page =(integer) $xml->per_page;
+	}
+	
+	
+	public function setPaginationInit(){
+	
 		$path_to_xml=__DIR__ . '\\pagination.xml';
 		$xml=simplexml_load_file($path_to_xml) or die("Error: Cannot create object");
-		$this->page_number = $xml->page_number;
-		$this->per_page = $xml->per_page;
+		$xml->page_number=1;
+		$xml->asXML($path_to_xml);
+	
 	}
-
+	public function setPaginationOlder(){
+	
+		
+		if($this->page_number <= 1){
+			//nothing happens, the same page will be displayed
+		}else{
+			$path_to_xml=__DIR__ . '\\pagination.xml';
+			$xml=simplexml_load_file($path_to_xml) or die("Error: Cannot create object");
+			$xml->page_number=$this->page_number-1;
+			$xml->asXML($path_to_xml);
+		
+		}
+		
+	
+	}
+	public function setPaginationNewer(){
+	
+		if($this->page_number >= 10){
+			//nothing happens, the same page will be displayed
+		}else{
+			$path_to_xml=__DIR__ . '\\pagination.xml';
+			$xml=simplexml_load_file($path_to_xml) or die("Error: Cannot create object");
+			$xml->page_number=$this->page_number+1;
+			$xml->asXML($path_to_xml);
+			//echo "ar trebui sa fi scris valoarea asta " . ($this->page_number+1);
+		}
+	
+	}
 	/**
     *
     * Connects to database and fetches all the blog posts
