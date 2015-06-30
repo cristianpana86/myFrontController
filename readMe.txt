@@ -27,7 +27,9 @@ Here details on how to find your proxy settings:  http://superuser.com/questions
 		$sth->bindParam(':page_number', $page_numb, PDO::PARAM_INT);
 		$sth->execute();
 -added pagination.xml file in \model to store current page number and number of posts per page
--added routes for /blog/older and /blog/newer
+-added routes for /blog/older and /blog/newer 
+
+
 -------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------

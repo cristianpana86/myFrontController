@@ -69,12 +69,54 @@ class Blog extends Page{
 	   }
 	}
 	
+	/**
+    * This method is used to render blogs when clicking Older link.
+    *
+    * @param    void
+    * @return   void
+    *
+    */
 	public function renderOlder(){
+		
+		$bm=new BlogModel();
+		$bm->setPaginationOlder();
+		
+		$this->render();
 	
 	
 	}
 	
+	/**
+    * This method is used to render blogs when clicking Newer link.
+    *
+    * @param    void
+    * @return   void
+    *
+    */
 	public function renderNewer(){
+		
+
+		$bm=new BlogModel();
+		$bm->setPaginationNewer();
+		
+		$this->render();
+	
+	
+	}
+	
+	/**
+    * This method is used to render blogs when clicking Blog link.
+    *
+    * @param    void
+    * @return   void
+    *
+    */
+	public function renderBlogsInit(){
+		
+		$bm=new BlogModel();
+		$bm->setPaginationInit();
+		
+		$this->render();
 	
 	}
 	
