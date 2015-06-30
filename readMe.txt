@@ -14,8 +14,8 @@ Start using GitHub!
 Here details on how to find your proxy settings:  http://superuser.com/questions/346372/how-do-i-know-what-proxy-server-im-using
 
 ------------------------------------------------------------------------------------------
------new brach for new mothod on how to list blog posts when clicking the "Blog" link----
--I will display a certain number of posts per page, and a Older posts and Newer Posts buttons 
+-----new branch for new method on how to list blog posts when clicking the "Blog" link----
+-I will display a certain number of posts per page (now is hardcoded to 2), and a Older posts and Newer Posts buttons 
 - I am using MySQL "LIMIT" clause to specify the number of records to be returned: http://www.w3schools.com/php/php_mysql_select_limit.asp
 		The SQL query below says "return only 10 records, start on record 16 (OFFSET 15)":
 		$sql = "SELECT * FROM Orders LIMIT 10 OFFSET 15";
