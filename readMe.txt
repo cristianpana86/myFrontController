@@ -4,7 +4,14 @@
 ----------------------  Changes in version 0.4  -------------------------------------
 -------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------
+Start using GitHub!
+1. create account
+2. install GitHub for Windows
+3. make Git work behind firewall at work. In the .gitconfig file found probably at %USERPROFILE% I added this line:
+		[http]
+	          proxy = http://<your-proxy>:<port>
 
+Here details on how to find your proxy settings:  http://superuser.com/questions/346372/how-do-i-know-what-proxy-server-im-using
 
 
 
