@@ -48,12 +48,12 @@
 	<route name="blog page older">
 		<path>/blog/older</path>
 	   <controllerClass>Blog</controllerClass>
-	   <action>postOnBlog</action>
+	   <action>renderOlder</action>
 	</route>
 	<route name="blog page newer">
 		<path>/blog/newer</path>
 	   <controllerClass>Blog</controllerClass>
-	   <action>postOnBlog</action>
+	   <action>renderNewer</action>
 	</route>
 	
 	

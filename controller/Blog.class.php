@@ -20,7 +20,7 @@ use CPANA\myFrontController\login\LoginUser;
 class Blog extends Page{
 	
 	
-    private $page_number=1;
+    //private $page_number=;
 	
 	
 	/**
@@ -69,12 +69,17 @@ class Blog extends Page{
 	   }
 	}
 	
-	public function pagination(){
+	public function renderOlder(){
 	
 	
 	}
+	
+	public function renderNewer(){
+	
+	}
+	
 	/**
-    * postOnBlog method connects to the Database and writes the a new entry on the BlogPosts table 
+    * render method connects to the Database and renders posts from BlogPosts table using getBlogPosts method from class BlogModel
     *
     * @param    void
     * @return   void
@@ -85,7 +90,7 @@ class Blog extends Page{
 			
 	        
 		    $bm=new BlogModel();
-			$result = $bm->getBlogPosts($this->page_number);
+			$result = $bm->getBlogPosts();
 			$new_content="";
 			
 

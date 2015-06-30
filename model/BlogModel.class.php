@@ -1,13 +1,20 @@
 <?php
 namespace CPANA\myFrontController\model;
 
+
+
 class BlogModel{
 
-	private $per_page=2;
+	private $page_number=0;
+	private $per_page=0;
 	
 	public function __construct(){
 	
-	    require_once 'DBCon.class.php';
+	    //require_once 'DBCon.class.php';
+		$path_to_xml=__DIR__ . '\\pagination.xml';
+		$xml=simplexml_load_file($path_to_xml) or die("Error: Cannot create object");
+		$this->page_number = $xml->page_number;
+		$this->per_page = $xml->per_page;
 	}
 
 	/**
@@ -18,10 +25,12 @@ class BlogModel{
     * @return      array
     *
     */
-	public function getBlogPosts($page_number){
-
+	public function getBlogPosts(){
+	
+		
+		
         $db=new DBCon();
-		$result=$db->fetchBlogPosts($page_number,$this->per_page);
+		$result=$db->fetchBlogPosts($this->page_number,$this->per_page);
 		
 		return $result;
 	}
