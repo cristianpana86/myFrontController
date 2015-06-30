@@ -3,7 +3,8 @@ namespace CPANA\myFrontController\model;
 
 class BlogModel{
 
-
+	private $per_page=2;
+	
 	public function __construct(){
 	
 	    require_once 'DBCon.class.php';
@@ -17,10 +18,10 @@ class BlogModel{
     * @return      array
     *
     */
-	public function getBlogPosts(){
+	public function getBlogPosts($page_number){
 
         $db=new DBCon();
-		$result=$db->fetchBlogPosts();
+		$result=$db->fetchBlogPosts($page_number,$this->per_page);
 		
 		return $result;
 	}

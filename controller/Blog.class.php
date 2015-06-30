@@ -19,8 +19,9 @@ use CPANA\myFrontController\login\LoginUser;
 
 class Blog extends Page{
 	
-	//this variable was used in development phase
-    private $mesaj="Bun venit pe BLOG ";
+	
+    private $page_number=1;
+	
 	
 	/**
     * displays the New Post entry form where user fills Post name, Author name and the actual post text
@@ -68,6 +69,10 @@ class Blog extends Page{
 	   }
 	}
 	
+	public function pagination(){
+	
+	
+	}
 	/**
     * postOnBlog method connects to the Database and writes the a new entry on the BlogPosts table 
     *
@@ -78,9 +83,9 @@ class Blog extends Page{
 	public function render(){
 	
 			
-	        //require_once "{$_SERVER["DOCUMENT_ROOT"]}".'/myFrontController/model/BlogModel.class.php';
+	        
 		    $bm=new BlogModel();
-			$result = $bm->getBlogPosts();
+			$result = $bm->getBlogPosts($this->page_number);
 			$new_content="";
 			
 
@@ -98,8 +103,8 @@ class Blog extends Page{
 			  $new_content.= "<tr>".$row['ActualPost']."</tr></br>";
 			  $new_content.= "</br></br></br>";
 			}
-			$new_content.= "</table>";
-			
+			$new_content.= "</table><br>";
+			$new_content.="<a href=/myFrontController/blog/older>Older posts</a>&nbsp;&nbsp;&nbsp;<a href=/myFrontController/blog/newer>Newer posts</a> ";
 			////////////////
 			if (LoginUser::validateLoginAdmin()){ Render::$menu="templates\menu_admin.php"; }
 			Render::$content =$new_content;
