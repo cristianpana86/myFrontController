@@ -13,7 +13,21 @@ Start using GitHub!
 
 Here details on how to find your proxy settings:  http://superuser.com/questions/346372/how-do-i-know-what-proxy-server-im-using
 
+------------------------------------------------------------------------------------------
+-----new branch for new method on how to list blog posts when clicking the "Blog" link----
+-I will display a certain number of posts per page (now is hardcoded to 2), and a Older posts and Newer Posts buttons 
+- I am using MySQL "LIMIT" clause to specify the number of records to be returned: http://www.w3schools.com/php/php_mysql_select_limit.asp
+		The SQL query below says "return only 10 records, start on record 16 (OFFSET 15)":
+		$sql = "SELECT * FROM Orders LIMIT 10 OFFSET 15";
 
+- it seems that the default type for bindParam is string so you will get an error if you do not specify the PDO:PARAM_INT:	http://stackoverflow.com/questions/4544051/sqlstate42000-syntax-error-or-access-violation-1064-you-have-an-error-in-you
+		
+		$sth=$this->db->prepare("SELECT * FROM blogposts LIMIT :per_page OFFSET :page_number ;");
+		$sth->bindParam(':per_page', $per_page, PDO::PARAM_INT);
+		$sth->bindParam(':page_number', $page_numb, PDO::PARAM_INT);
+		$sth->execute();
+-added pagination.xml file in \model to store current page number and number of posts per page
+-added routes for /blog/older and /blog/newer 
 
 
 -------------------------------------------------------------------------------------

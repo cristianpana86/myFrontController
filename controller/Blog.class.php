@@ -19,8 +19,9 @@ use CPANA\myFrontController\login\LoginUser;
 
 class Blog extends Page{
 	
-	//this variable was used in development phase
-    private $mesaj="Bun venit pe BLOG ";
+	
+    //private $page_number=;
+	
 	
 	/**
     * displays the New Post entry form where user fills Post name, Author name and the actual post text
@@ -69,7 +70,58 @@ class Blog extends Page{
 	}
 	
 	/**
-    * postOnBlog method connects to the Database and writes the a new entry on the BlogPosts table 
+    * This method is used to render blogs when clicking Older link.
+    *
+    * @param    void
+    * @return   void
+    *
+    */
+	public function renderOlder(){
+		
+		$bm=new BlogModel();
+		$bm->setPaginationOlder();
+		
+		$this->render();
+	
+	
+	}
+	
+	/**
+    * This method is used to render blogs when clicking Newer link.
+    *
+    * @param    void
+    * @return   void
+    *
+    */
+	public function renderNewer(){
+		
+
+		$bm=new BlogModel();
+		$bm->setPaginationNewer();
+		
+		$this->render();
+	
+	
+	}
+	
+	/**
+    * This method is used to render blogs when clicking Blog link.
+    *
+    * @param    void
+    * @return   void
+    *
+    */
+	public function renderBlogsInit(){
+		
+		$bm=new BlogModel();
+		$bm->setPaginationInit();
+		
+		$this->render();
+	
+	}
+	
+	/**
+    * render method connects to the Database and renders posts from BlogPosts table using getBlogPosts method from class BlogModel
     *
     * @param    void
     * @return   void
@@ -78,7 +130,7 @@ class Blog extends Page{
 	public function render(){
 	
 			
-	        //require_once "{$_SERVER["DOCUMENT_ROOT"]}".'/myFrontController/model/BlogModel.class.php';
+	        
 		    $bm=new BlogModel();
 			$result = $bm->getBlogPosts();
 			$new_content="";
@@ -98,8 +150,8 @@ class Blog extends Page{
 			  $new_content.= "<tr>".$row['ActualPost']."</tr></br>";
 			  $new_content.= "</br></br></br>";
 			}
-			$new_content.= "</table>";
-			
+			$new_content.= "</table><br>";
+			$new_content.="<a href=/myFrontController/blog/older>Older posts</a>&nbsp;&nbsp;&nbsp;<a href=/myFrontController/blog/newer>Newer posts</a> ";
 			////////////////
 			if (LoginUser::validateLoginAdmin()){ Render::$menu="templates\menu_admin.php"; }
 			Render::$content =$new_content;

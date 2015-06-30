@@ -8,7 +8,7 @@
 	<route name="blog page">
        <path>/blog</path>
 	   <controllerClass>Blog</controllerClass>
-	   <action>render</action>
+	   <action>renderBlogsInit</action>
 	</route>
 	
 	<route name="admin_login_page">
@@ -44,6 +44,16 @@
 		<path>/admin/postOnBlog</path>
 	   <controllerClass>Blog</controllerClass>
 	   <action>postOnBlog</action>
+	</route>
+	<route name="blog page older">
+		<path>/blog/older</path>
+	   <controllerClass>Blog</controllerClass>
+	   <action>renderOlder</action>
+	</route>
+	<route name="blog page newer">
+		<path>/blog/newer</path>
+	   <controllerClass>Blog</controllerClass>
+	   <action>renderNewer</action>
 	</route>
 	
 	
