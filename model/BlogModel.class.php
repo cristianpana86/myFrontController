@@ -55,7 +55,7 @@ class BlogModel{
 	}
 	/**
     *
-    * Connects to database and fetches all the blog posts
+    * Connects to database and fetches specific page posts
     *
     * @param    void
     * @return      array

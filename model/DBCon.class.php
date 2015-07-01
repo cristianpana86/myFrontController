@@ -52,9 +52,10 @@ class DBCon{
 	
 	/**
     *
-    * Fetches the content of the static pages from the database
+    * Fetches BlogPost pages from the database
     * @copyright  2015 Cristian Pana 
-    * @param    void
+    * @param    integer $page_number
+	* @param    integer $per_page
     * @return   array
     *
     */
@@ -89,10 +90,10 @@ class DBCon{
 	}
 	/**
     *
-    * Fetches the content of the static pages from the database
+    * add new Post to Database
     * @copyright  2015 Cristian Pana 
-    * @param    string $Author, string $Category, $Text
-    * @return   interger
+    * @param    string $Author, string $Category, string $Text
+    * @return   integer
     *
     */
 	public function newPost($Author,$Category,$Text,$Title){

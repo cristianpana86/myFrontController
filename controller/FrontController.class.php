@@ -58,7 +58,9 @@ class FrontController{
 	
 	/**
     *
-    * Calls the needed object and method based on the class  properties 
+    * Calls the needed object and method based on path in the HTTP Request
+	* it uses the findPath function to determine if the path requested is configured and if yes calls the class and method 
+	* specified in \config\route.xml
 	*
     * @copyright  2015 Cristian Pana 
 	* @param    void
