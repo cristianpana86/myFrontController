@@ -61,16 +61,31 @@ class DBCon{
 	
 	public function fetchBlogPosts($page_number,$per_page){
 		
-		$page_numb=($page_number*$per_page)-($page_number+1);
-	    $sth=$this->db->prepare("SELECT * FROM blogposts LIMIT :per_page OFFSET :page_number ;");
-		$sth->bindParam(':per_page', $per_page, PDO::PARAM_INT);
-		$sth->bindParam(':page_number', $page_numb, PDO::PARAM_INT);
 		
-		$sth->execute();
+		if($page_number<=1){
+			
+			$sth=$this->db->prepare("SELECT * FROM blogposts LIMIT :per_page OFFSET 0;");
+			$sth->bindParam(':per_page', $per_page, PDO::PARAM_INT);
+						
+			$sth->execute();
+			
+			$result=$sth->fetchAll();
+			$this->db=null;
+			return $result;
 		
-		$result=$sth->fetchAll();
-		$this->db=null;
-		return $result;
+		}else{
+			$page_numb=($page_number-1)*$per_page;
+			echo $page_numb;
+			$sth=$this->db->prepare("SELECT * FROM blogposts LIMIT :per_page OFFSET :page_number ;");
+			$sth->bindParam(':per_page', $per_page, PDO::PARAM_INT);
+			$sth->bindParam(':page_number', $page_numb, PDO::PARAM_INT);
+			
+			$sth->execute();
+			
+			$result=$sth->fetchAll();
+			$this->db=null;
+			return $result;
+		}
 	}
 	/**
     *
