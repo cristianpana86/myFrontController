@@ -55,6 +55,11 @@
 	   <controllerClass>Blog</controllerClass>
 	   <action>renderNewer</action>
 	</route>
+	<route name="individual blog post">
+		<path>/blog/posts/{slug}</path>
+	   <controllerClass>Blog</controllerClass>
+	   <action>renderNewer</action>
+	</route>
 	
 	
 </route_base>

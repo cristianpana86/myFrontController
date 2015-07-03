@@ -31,6 +31,35 @@ Here details on how to find your proxy settings:  http://superuser.com/questions
 
 -added pagination.xml file in \model to store current page number and number of posts per page
 -added routes for /blog/older and /blog/newer 
+-------------------------------------------------------------------------------------------
+------ display individual blog posts ----------------------------
+-for this I need to modify a little bit the routing to recognize paths like /blog/post/post-name-without-spaces
+-I need a regular expression to match this kind of routes. I do not have too much experience with regexp and it turns out to be
+difficult to understand in the beginning. Some important aspects about regexp in PHP:
+
+- PHP uses another pair of delimiters inside '': "You must specify a delimiter for your expression. A delimiter is a special 
+character used at the start and end of your expression to denote which part is the expression. This allows you to use modifiers 
+and the interpreter to know which is an expression and which are modifiers."
+
+ http://stackoverflow.com/questions/7660545/delimiter-must-not-be-alphanumeric-or-backslash-and-preg-match
+
+-http://www.phpliveregex.com/ this is a website where you can test your regexp with different php functions (preg_match, preg_grep etc)
+
+- the php manual for regexp is found here: http://www.php.net/manual/en/reference.pcre.pattern.syntax.php
+- possible regexp:  preg_match_all("/\/post\/[\w\-]+/i", $input, $rezultate);
+
+
+---------------------------------------------------------------------------------
+-------------------TinyMCE -------------------------------------------------------------
+
+
+-----------------------------------------------------------------------------------------
+------ uploading and storing photos-----------------------------------------------------
+
+
+--------------------------------------------------------------------------
+----- modify database structure----------------------------------------------
+
 
 
 -------------------------------------------------------------------------------------
