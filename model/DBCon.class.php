@@ -50,34 +50,72 @@ class DBCon{
 			
 	}
 	
+	 /**
+    *
+    * Fetches the content of the blog posts from the database
+    * @copyright  2015 Cristian Pana 
+    * @param    string $transformed_post_slug
+    * @return   string $result  - result returned by SQL query
+    *
+    */
+	public function fetchPost($transformed_post_slug){
+	
+        $sth=$this->db->prepare("SELECT * FROM blogposts WHERE LOWER(title) = :transformed_blog_slug;");
+		$sth->bindParam(':transformed_blog_slug', $transformed_post_slug);
+						
+		$sth->execute();
+			
+		$result=$sth->fetchAll();
+		$this->db=null;
+		return $result;
+			
+	}
+	
+	
 	/**
     *
-    * Fetches the content of the static pages from the database
+    * Fetches BlogPost pages from the database
     * @copyright  2015 Cristian Pana 
-    * @param    void
+    * @param    integer $page_number
+	* @param    integer $per_page
     * @return   array
     *
     */
 	
 	public function fetchBlogPosts($page_number,$per_page){
 		
-		$page_numb=($page_number*$per_page)-($page_number+1);
-	    $sth=$this->db->prepare("SELECT * FROM blogposts LIMIT :per_page OFFSET :page_number ;");
-		$sth->bindParam(':per_page', $per_page, PDO::PARAM_INT);
-		$sth->bindParam(':page_number', $page_numb, PDO::PARAM_INT);
 		
-		$sth->execute();
+		if($page_number<=1){
+			
+			$sth=$this->db->prepare("SELECT * FROM blogposts LIMIT :per_page OFFSET 0;");
+			$sth->bindParam(':per_page', $per_page, PDO::PARAM_INT);
+						
+			$sth->execute();
+			
+			$result=$sth->fetchAll();
+			$this->db=null;
+			return $result;
 		
-		$result=$sth->fetchAll();
-		$this->db=null;
-		return $result;
+		}else{
+			$page_numb=($page_number-1)*$per_page;
+			echo $page_numb;
+			$sth=$this->db->prepare("SELECT * FROM blogposts LIMIT :per_page OFFSET :page_number ;");
+			$sth->bindParam(':per_page', $per_page, PDO::PARAM_INT);
+			$sth->bindParam(':page_number', $page_numb, PDO::PARAM_INT);
+			
+			$sth->execute();
+			
+			$result=$sth->fetchAll();
+			$this->db=null;
+			return $result;
+		}
 	}
 	/**
     *
-    * Fetches the content of the static pages from the database
+    * add new Post to Database
     * @copyright  2015 Cristian Pana 
-    * @param    string $Author, string $Category, $Text
-    * @return   interger
+    * @param    string $Author, string $Category, string $Text
+    * @return   integer
     *
     */
 	public function newPost($Author,$Category,$Text,$Title){

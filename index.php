@@ -17,8 +17,8 @@ use CPANA\myFrontController\controller\FrontController;
 
 
 spl_autoload_register(function ($class) {
-	
-	//echo "autoloaderul cauta clasa  " . $class . "<br>";
+    
+    //echo "autoloaderul cauta clasa  " . $class . "<br>";
     // project-specific namespace prefix
     $prefix = 'CPANA\\myFrontController\\';
 
@@ -29,24 +29,26 @@ spl_autoload_register(function ($class) {
     $len = strlen($prefix);
     if (strncmp($prefix, $class, $len) !== 0) {
         // no, move to the next registered autoloader
-		return;
+        return;
     }
 
     // get the relative class name
     $relative_class = substr($class, $len);
 
+    
+
+    
+
     // replace the namespace prefix with the base directory, replace namespace
     // separators with directory separators in the relative class name, append
     // with .class.php
     $file = $base_dir . $relative_class . '.class.php';
-	//echo "<br>" . "file path is " . $file . "<br>";
+    //echo "<br>" . "file path is " . $file . "<br>";
     // if the file exists, require it
     if (file_exists($file)) {
         require $file;
     }
 });
-
-
 
 
 $fconontroller=new FrontController();

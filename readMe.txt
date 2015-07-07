@@ -20,14 +20,65 @@ Here details on how to find your proxy settings:  http://superuser.com/questions
 		The SQL query below says "return only 10 records, start on record 16 (OFFSET 15)":
 		$sql = "SELECT * FROM Orders LIMIT 10 OFFSET 15";
 
-- it seems that the default type for bindParam is string so you will get an error if you do not specify the PDO:PARAM_INT:	http://stackoverflow.com/questions/4544051/sqlstate42000-syntax-error-or-access-violation-1064-you-have-an-error-in-you
+- it seems that the default type for bindParam is string so you will get an error if you do not specify the PDO:PARAM_INT:
+	http://stackoverflow.com/questions/4544051/sqlstate42000-syntax-error-or-access-violation-1064-you-have-an-error-in-you
 		
 		$sth=$this->db->prepare("SELECT * FROM blogposts LIMIT :per_page OFFSET :page_number ;");
 		$sth->bindParam(':per_page', $per_page, PDO::PARAM_INT);
 		$sth->bindParam(':page_number', $page_numb, PDO::PARAM_INT);
 		$sth->execute();
+
+
 -added pagination.xml file in \model to store current page number and number of posts per page
 -added routes for /blog/older and /blog/newer 
+-------------------------------------------------------------------------------------------
+------ display individual blog posts ----------------------------
+-for this I need to modify a little bit the routing to recognize paths like /blog/post/post-name-without-spaces
+-I need a regular expression to match this kind of routes. I do not have too much experience with regexp and it turns out to be
+difficult to understand in the beginning. Some important aspects about regexp in PHP:
+
+		- PHP uses another pair of delimiters inside '': "You must specify a delimiter for your expression. A delimiter is a special 
+		character used at the start and end of your expression to denote which part is the expression. This allows you to use modifiers 
+		and the interpreter to know which is an expression and which are modifiers."
+
+		 http://stackoverflow.com/questions/7660545/delimiter-must-not-be-alphanumeric-or-backslash-and-preg-match
+
+		-http://www.phpliveregex.com/ this is a website where you can test your regexp with different php functions (preg_match, preg_grep etc)
+
+		- the php manual for regexp is found here: http://www.php.net/manual/en/reference.pcre.pattern.syntax.php
+
+		-  regexp from "/blog/post/blog-title-here" :  preg_match("/\/blog\/post\/[\w\-]+/i",  $path);
+
+- In order to have generic routes I added a new field in the route.xml called <path_regexp>, example below
+
+	<route name="individual blog post">
+		<path>/blog/posts/{slug}</path>
+	    <path_regexp>/\/blog\/post\/[\w\-]+/i</path_regexp>
+	    <controllerClass>Blog</controllerClass>
+	    <action>renderPost</action>
+	</route>
+
+- I am doing a verification using preg_match and the <path_regexp>	to see if it is matching the requested URI from HTTP request.
+-if there is a match than a new oject of class "controllerClass" is created, and it is called the <action> method with parameter {slug},
+basically the value after "/blog/post/"
+
+-this triggers a search in the database for a blog post where title is like slug. what if there are two identical titles?at this moment all of them are listed.
+- links are added dynamically on the list of all blogs (when clicking Blog button) based on the Title from database in which I replce spaces with hyphen.
+
+			$slug_from_title=  strtolower(str_replace(' ','-',$row['title']));
+			$new_content.= "<tr><a href=/myFrontController/blog/post/$slug_from_title>".$row['title']."</a></tr></br>";
+			
+-----------------------------------------------------------------------------------------------------------------------
+-------------------TinyMCE -------------------------------------------------------------
+
+
+-----------------------------------------------------------------------------------------
+------ uploading and storing photos-----------------------------------------------------
+
+
+--------------------------------------------------------------------------
+----- modify database structure----------------------------------------------
+
 
 
 -------------------------------------------------------------------------------------

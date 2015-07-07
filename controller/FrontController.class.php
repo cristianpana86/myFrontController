@@ -17,6 +17,7 @@ class FrontController{
 	private $relative_url='';
 	private $controllerClass='';
 	private $action='';
+	private $param='';
 	
 	public function __construct(){
 		
@@ -50,6 +51,18 @@ class FrontController{
 				$this->action = $route->action;
 				return true;
 			}
+			else if($route->path_regexp!=""){    //if the route contains a path_regexp verify if it matches the requested route
+			    
+				if(preg_match($route->path_regexp, $path)){  
+			           
+						$this->controllerClass = $route->controllerClass;
+						$this->action = $route->action;
+						//extract the parameter (post name) from path like "/blog/post/{slug}" - this should be implemented in a more general way
+						$this->param=substr($path,strlen('blog/posts/')); 
+						
+						return true;
+				}
+			}
 			
 		}
 		return false;
@@ -58,7 +71,9 @@ class FrontController{
 	
 	/**
     *
-    * Calls the needed object and method based on the class  properties 
+    * Calls the needed object and method based on path in the HTTP Request
+	* it uses the findPath() function to determine if the path requested is configured and if yes calls the class and method 
+	* specified in \config\route.xml
 	*
     * @copyright  2015 Cristian Pana 
 	* @param    void
@@ -73,11 +88,19 @@ class FrontController{
 	    */ 
 		if($this->findPath($this->relative_url)){	
 			
-			$class_name=__NAMESPACE__ . '\\'. $this->controllerClass;
-			$func=(string)$this->action;
-			//var_dump($func);	
-			$obj= new $class_name();
-			$obj->$func();
+			//handles differently uri with parameter and those without parameters
+			if($this->param!=''){
+			
+				$class_name=__NAMESPACE__ . '\\'. $this->controllerClass;
+				$func=(string)$this->action;
+				$obj= new $class_name();
+				$obj->$func($this->param);
+			}else{
+				$class_name=__NAMESPACE__ . '\\'. $this->controllerClass;
+				$func=(string)$this->action;
+				$obj= new $class_name();
+				$obj->$func();
+			}
 		}else{
 			//call specific class to handle 404 messages
 			$class_name=__NAMESPACE__ . '\\'. "PageNotFound";
