@@ -53,9 +53,30 @@ class BlogModel{
 		}
 	
 	}
+	
 	/**
     *
-    * Connects to database and fetches specific page posts
+    * Connects to database and fetches specified posts
+    *
+    * @param    string $post_slug - is the name of the post extracted from the URI, ex URI: "/blog/posts/welcome-to-my-blog-people"
+    *                              - the $post_slug will be "welcome-to-my-blog-people"
+	* @return      array
+    *
+    */
+	public function getPost($post_slug){
+	
+		
+		
+        $db=new DBCon();
+		$transformed_post_slug=str_replace('-',' ',$post_slug);
+		$result=$db->fetchPost($transformed_post_slug);
+		
+		return $result;
+	}
+	
+	/**
+    *
+    * Connects to database and fetches all  posts
     *
     * @param    void
     * @return      array

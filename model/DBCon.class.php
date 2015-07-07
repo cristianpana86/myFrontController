@@ -50,6 +50,28 @@ class DBCon{
 			
 	}
 	
+	 /**
+    *
+    * Fetches the content of the blog posts from the database
+    * @copyright  2015 Cristian Pana 
+    * @param    string $transformed_post_slug
+    * @return   string $result  - result returned by SQL query
+    *
+    */
+	public function fetchPost($transformed_post_slug){
+	
+        $sth=$this->db->prepare("SELECT * FROM blogposts WHERE LOWER(title) = :transformed_blog_slug;");
+		$sth->bindParam(':transformed_blog_slug', $transformed_post_slug);
+						
+		$sth->execute();
+			
+		$result=$sth->fetchAll();
+		$this->db=null;
+		return $result;
+			
+	}
+	
+	
 	/**
     *
     * Fetches BlogPost pages from the database

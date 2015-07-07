@@ -37,19 +37,38 @@ Here details on how to find your proxy settings:  http://superuser.com/questions
 -I need a regular expression to match this kind of routes. I do not have too much experience with regexp and it turns out to be
 difficult to understand in the beginning. Some important aspects about regexp in PHP:
 
-- PHP uses another pair of delimiters inside '': "You must specify a delimiter for your expression. A delimiter is a special 
-character used at the start and end of your expression to denote which part is the expression. This allows you to use modifiers 
-and the interpreter to know which is an expression and which are modifiers."
+		- PHP uses another pair of delimiters inside '': "You must specify a delimiter for your expression. A delimiter is a special 
+		character used at the start and end of your expression to denote which part is the expression. This allows you to use modifiers 
+		and the interpreter to know which is an expression and which are modifiers."
 
- http://stackoverflow.com/questions/7660545/delimiter-must-not-be-alphanumeric-or-backslash-and-preg-match
+		 http://stackoverflow.com/questions/7660545/delimiter-must-not-be-alphanumeric-or-backslash-and-preg-match
 
--http://www.phpliveregex.com/ this is a website where you can test your regexp with different php functions (preg_match, preg_grep etc)
+		-http://www.phpliveregex.com/ this is a website where you can test your regexp with different php functions (preg_match, preg_grep etc)
 
-- the php manual for regexp is found here: http://www.php.net/manual/en/reference.pcre.pattern.syntax.php
-- possible regexp:  preg_match_all("/\/post\/[\w\-]+/i", $input, $rezultate);
+		- the php manual for regexp is found here: http://www.php.net/manual/en/reference.pcre.pattern.syntax.php
 
+		-  regexp from "/blog/post/blog-title-here" :  preg_match("/\/blog\/post\/[\w\-]+/i",  $path);
 
----------------------------------------------------------------------------------
+- In order to have generic routes I added a new field in the route.xml called <path_regexp>, example below
+
+	<route name="individual blog post">
+		<path>/blog/posts/{slug}</path>
+	    <path_regexp>/\/blog\/post\/[\w\-]+/i</path_regexp>
+	    <controllerClass>Blog</controllerClass>
+	    <action>renderPost</action>
+	</route>
+
+- I am doing a verification using preg_match and the <path_regexp>	to see if it is matching the requested URI from HTTP request.
+-if there is a match than a new oject of class "controllerClass" is created, and it is called the <action> method with parameter {slug},
+basically the value after "/blog/post/"
+
+-this triggers a search in the database for a blog post where title is like slug. what if there are two identical titles?at this moment all of them are listed.
+- links are added dynamically on the list of all blogs (when clicking Blog button) based on the Title from database in which I replce spaces with hyphen.
+
+			$slug_from_title=  strtolower(str_replace(' ','-',$row['title']));
+			$new_content.= "<tr><a href=/myFrontController/blog/post/$slug_from_title>".$row['title']."</a></tr></br>";
+			
+-----------------------------------------------------------------------------------------------------------------------
 -------------------TinyMCE -------------------------------------------------------------
 
 

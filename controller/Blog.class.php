@@ -7,11 +7,11 @@ use CPANA\myFrontController\view\Render;
 use CPANA\myFrontController\login\LoginUser;
 
 /**
-* Home class handles the behaviour of the "Blog" page
+* Blog class handles the behaviour of the "Blog" page
 *
 *
 * @author   Cristian Pana <cristianpana86@yahoo.com>
-* @version   0.1
+* @version   0.4
 * @access   public
 */
 
@@ -105,7 +105,7 @@ class Blog extends Page{
 	}
 	
 	/**
-    * This method is used to render specific blog post. The blog post slug is received as parameter
+    * This method is used to create an BlogModel object and extract from database a specific blog post. The blog post slug is received as parameter
     *
     * @param   string  $post_slug
     * @return   void
@@ -114,9 +114,9 @@ class Blog extends Page{
 	public function renderPost($post_slug){
 		
 		$bm=new BlogModel();
-		$bm->getPost($post_slug);
+		$result_from_db=$bm->getPost($post_slug);
+		$this->renderSinglePost($result_from_db);
 		
-		$this->render();
 	
 	}
 	
@@ -169,6 +169,43 @@ class Blog extends Page{
 			}
 			$new_content.= "</table><br>";
 			$new_content.="<a href=/myFrontController/blog/older>Older posts</a>&nbsp;&nbsp;&nbsp;<a href=/myFrontController/blog/newer>Newer posts</a> ";
+			////////////////
+			if (LoginUser::validateLoginAdmin()){ Render::$menu="templates\menu_admin.php"; }
+			Render::$content =$new_content;
+			Render::renderPage("user");
+			
+			
+			
+	}
+	
+	/**
+    * render single post method,receives the information regarding the blog post in an array and renders post
+    *
+    * @param    array $result_from_db
+    * @return   void
+    *
+    */
+	public function renderSinglePost($result_from_db){
+	
+						
+			$new_content="";
+			
+	        foreach($result_from_db as $row){
+			 // print "<tr> ID  </tr> ";
+			 // print "<tr>".$row['Id']."</tr></br>";
+			  $new_content.= "<tr> Category  </tr> ";
+			  $new_content.= "<tr>".$row['Category']."</tr></br>";
+			  $new_content.= "<tr> Author </tr>";
+			  $new_content.= "<tr>".$row['Author']."</tr></br>";
+			  $new_content.= "<tr> Title </tr>";
+			  $slug_from_title=  strtolower(str_replace(' ','-',$row['title']));
+			  $new_content.= "<tr><a href=/myFrontController/blog/post/$slug_from_title>".$row['title']."</a></tr></br>";
+			  $new_content.= "<tr> Post </tr> </br>";
+			  $new_content.= "<tr>".$row['ActualPost']."</tr></br>";
+			  $new_content.= "</br></br></br>";
+			}
+			$new_content.= "</table><br>";
+			$new_content.="<a href=/myFrontController/blog>Back</a>";
 			////////////////
 			if (LoginUser::validateLoginAdmin()){ Render::$menu="templates\menu_admin.php"; }
 			Render::$content =$new_content;

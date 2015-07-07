@@ -72,7 +72,7 @@ class FrontController{
 	/**
     *
     * Calls the needed object and method based on path in the HTTP Request
-	* it uses the findPath function to determine if the path requested is configured and if yes calls the class and method 
+	* it uses the findPath() function to determine if the path requested is configured and if yes calls the class and method 
 	* specified in \config\route.xml
 	*
     * @copyright  2015 Cristian Pana 
@@ -90,7 +90,7 @@ class FrontController{
 			
 			//handles differently uri with parameter and those without parameters
 			if($this->param!=''){
-			echo "param is not empty = $this->param";
+			
 				$class_name=__NAMESPACE__ . '\\'. $this->controllerClass;
 				$func=(string)$this->action;
 				$obj= new $class_name();
