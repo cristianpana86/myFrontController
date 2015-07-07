@@ -105,7 +105,23 @@ class Blog extends Page{
 	}
 	
 	/**
-    * This method is used to render blogs when clicking Blog link.
+    * This method is used to render specific blog post. The blog post slug is received as parameter
+    *
+    * @param   string  $post_slug
+    * @return   void
+    *
+    */
+	public function renderPost($post_slug){
+		
+		$bm=new BlogModel();
+		$bm->getPost($post_slug);
+		
+		$this->render();
+	
+	}
+	
+	/**
+    * This method is used to render blog posts when clicking Blog link.
     *
     * @param    void
     * @return   void
@@ -145,7 +161,8 @@ class Blog extends Page{
 			  $new_content.= "<tr> Author </tr>";
 			  $new_content.= "<tr>".$row['Author']."</tr></br>";
 			  $new_content.= "<tr> Title </tr>";
-			  $new_content.= "<tr>".$row['title']."</tr></br>";
+			  $slug_from_title=  strtolower(str_replace(' ','-',$row['title']));
+			  $new_content.= "<tr><a href=/myFrontController/blog/post/$slug_from_title>".$row['title']."</a></tr></br>";
 			  $new_content.= "<tr> Post </tr> </br>";
 			  $new_content.= "<tr>".$row['ActualPost']."</tr></br>";
 			  $new_content.= "</br></br></br>";

@@ -57,8 +57,9 @@
 	</route>
 	<route name="individual blog post">
 		<path>/blog/posts/{slug}</path>
-	   <controllerClass>Blog</controllerClass>
-	   <action>renderNewer</action>
+	    <path_regexp>/\/blog\/post\/[\w\-]+/i</path_regexp>
+	    <controllerClass>Blog</controllerClass>
+	    <action>renderPost</action>
 	</route>
 	
 	
