@@ -62,7 +62,6 @@ class FrontController{
 							//extract the parameter (post name) from path like "/blog/post/{slug}" - this should be implemented in a more general way
 							//$this->param=substr($path,strlen('blog/posts/')); -old code
 						$this->param=substr($path,strlen($path_without_slug));//this is the more generalized implementation mentioned above
-						
 						return true;
 				}
 			}
@@ -116,6 +115,7 @@ class FrontController{
 		   
 				
 	}
+	
 }
 
 ?>

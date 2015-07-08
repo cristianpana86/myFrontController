@@ -32,7 +32,8 @@ Here details on how to find your proxy settings:  http://superuser.com/questions
 -added pagination.xml file in \model to store current page number and number of posts per page
 -added routes for /blog/older and /blog/newer 
 -------------------------------------------------------------------------------------------
------- display individual blog posts ----------------------------
+------------------ display individual blog posts ----------------------------
+--------------------------------------------------------------------------------------------------------
 
 -for this I need to modify a little bit the routing to recognize paths like /blog/post/post-name-without-spaces
 -I need a regular expression to match this kind of routes. I do not have too much experience with regexp and it turns out to be
@@ -72,8 +73,10 @@ make all letters lower-case.
 - further improvement should be done in for a proper slug generator (treat all signs and also transform language specific signs to the closest ASCII charachter)
 - other improvement on having unique slugs from blog posts with same title (maybe adding a timestamp or at least day and month). when viewing it's ok
 I can list all the identic slugs, the issue appears when I want to edit.
+
 --------------------------------------------------------------------------------------------------------
 --------- admin dashboard , edit posts, delete posts, publish? ------------------------------------------
+------------------------------------------------------------------------------------------------------------
 
 Between integrating edit buttons in the <Blog> view (when you click Blog button) of the Admin and creating a different view, I picked the
 first option for rapid development based on what it is already implemented. 
