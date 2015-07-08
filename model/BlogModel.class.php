@@ -56,6 +56,22 @@ class BlogModel{
 	
 	/**
     *
+    * Connects to database and fetches all  posts headers only (not entire content)
+    *
+    * @param    void
+    * @return      array
+    *
+    */
+	public function getBlogPostsHeaders(){
+	
+		$db=new DBCon();
+		$result=$db->fetchBlogPosts(1,1000);
+		
+		return $result;
+	
+	}
+	/**
+    *
     * Connects to database and fetches specified posts
     *
     * @param    string $post_slug - is the name of the post extracted from the URI, ex URI: "/blog/posts/welcome-to-my-blog-people"
@@ -73,7 +89,6 @@ class BlogModel{
 		
 		return $result;
 	}
-	
 	/**
     *
     * Connects to database and fetches all  posts
@@ -82,6 +97,7 @@ class BlogModel{
     * @return      array
     *
     */
+	
 	public function getBlogPosts(){
 	
 		
