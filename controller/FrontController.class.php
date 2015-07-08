@@ -57,8 +57,11 @@ class FrontController{
 			           
 						$this->controllerClass = $route->controllerClass;
 						$this->action = $route->action;
-						//extract the parameter (post name) from path like "/blog/post/{slug}" - this should be implemented in a more general way
-						$this->param=substr($path,strlen('blog/posts/')); 
+						// from a path like /blog/post/{slug} found in route.xml this line of code extracts blog/post/
+						$path_without_slug=substr($route->path,1,strpos($route->path,"{")-1);
+							//extract the parameter (post name) from path like "/blog/post/{slug}" - this should be implemented in a more general way
+							//$this->param=substr($path,strlen('blog/posts/')); -old code
+						$this->param=substr($path,strlen($path_without_slug));//this is the more generalized implementation mentioned above
 						
 						return true;
 				}

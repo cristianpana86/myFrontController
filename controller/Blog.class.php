@@ -20,8 +20,7 @@ use CPANA\myFrontController\login\LoginUser;
 class Blog extends Page{
 	
 	
-    //private $page_number=;
-	
+   	
 	
 	/**
     * displays the New Post entry form where user fills Post name, Author name and the actual post text
@@ -29,7 +28,7 @@ class Blog extends Page{
     */
 	public function new_post_entry(){
 		//get the correct path to the new_post_entry.php template file
-		$path=substr(__DIR__,0, (strlen(__DIR__)-strlen("controller"))) . 'templates\ ew_post_entry.php';
+		$path=substr(__DIR__,0, (strlen(__DIR__)-strlen("controller"))) . 'templates\new_post_entry.php';
 		
 		//reads the entire content of the file login.php in order to have it rendered
 		$text=file_get_contents($path);
@@ -103,7 +102,26 @@ class Blog extends Page{
 	
 	
 	}
+	/**
+    * This method is used to edit a blog post fr. The blog post slug is received as parameter
+    *
+    * @param   string  $post_slug
+    * @return   void
+    *
+    */
+	public function editPost($post_slug){
+		
+		//get the correct path to the new_post_entry.php template file
+		$path=substr(__DIR__,0, (strlen(__DIR__)-strlen("controller"))) . 'templates\edit_post_entry.php';
+		
+		//reads the entire content of the file login.php in order to have it rendered
+		$text=file_get_contents($path);
+		
+		if (LoginUser::validateLoginAdmin()){ Render::$menu="templates\menu_admin.php"; }
+		Render::$content=$text;
+		Render::renderPage("user");
 	
+	}
 	/**
     * This method is used to create an BlogModel object and extract from database a specific blog post. The blog post slug is received as parameter
     *
@@ -185,7 +203,7 @@ class Blog extends Page{
 					$new_content.= "<td>".$row['Category']."</td>  ";
 					$new_content.= "<td>".$row['Author']."</td>  ";
 					$new_content.= "<td><a href=/myFrontController/blog/post/$slug_from_title>".$row['title']."</a></td> ";
-					$new_content.='<td><a href="/myFrontController/edit/' . $slug_from_title . '">Edit</a></td>';
+					$new_content.='<td><a href="/myFrontController/edit/blog/post/' . $slug_from_title . '">Edit</a></td>';
 					$new_content.= "</tr>";
 
 				}

@@ -33,6 +33,7 @@ Here details on how to find your proxy settings:  http://superuser.com/questions
 -added routes for /blog/older and /blog/newer 
 -------------------------------------------------------------------------------------------
 ------ display individual blog posts ----------------------------
+
 -for this I need to modify a little bit the routing to recognize paths like /blog/post/post-name-without-spaces
 -I need a regular expression to match this kind of routes. I do not have too much experience with regexp and it turns out to be
 difficult to understand in the beginning. Some important aspects about regexp in PHP:
@@ -59,7 +60,7 @@ difficult to understand in the beginning. Some important aspects about regexp in
 	</route>
 
 - I am doing a verification using preg_match and the <path_regexp>	to see if it is matching the requested URI from HTTP request.
--if there is a match than a new oject of class "controllerClass" is created, and it is called the <action> method with parameter {slug},
+-if there is a match than a new object of class "controllerClass" is created, and it is called the <action> method with parameter {slug},
 basically the value after "/blog/post/"
 
 -this triggers a search in the database for a blog post where title is like slug. what if there are two identical titles?at this moment all of them are listed.
@@ -68,7 +69,9 @@ make all letters lower-case.
 
 			$slug_from_title=  strtolower(str_replace(' ','-',$row['title']));
 			$new_content.= "<tr><a href=/myFrontController/blog/post/$slug_from_title>".$row['title']."</a></tr></br>";
-			
+- further improvement should be done in for a proper slug generator (treat all signs and also transform language specific signs to the closest ASCII charachter)
+- other improvement on having unique slugs from blog posts with same title (maybe adding a timestamp or at least day and month). when viewing it's ok
+I can list all the identic slugs, the issue appears when I want to edit.
 --------------------------------------------------------------------------------------------------------
 --------- admin dashboard , edit posts, delete posts, publish? ------------------------------------------
 
