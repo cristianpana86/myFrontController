@@ -36,7 +36,7 @@ class Blog extends Page{
 		if (LoginUser::validateLoginAdmin()){ Render::$menu="templates\menu_admin.php"; }
 		Render::$content=$text;
 		Render::renderPage("user");
-		//include 'C:\\Program Files (x86)\\EasyPHP-DevServer-14.1VC9\\data\\localweb\\myFrontController\\templates\ ew_post_entry.php';
+		
 		
 	
 	}
@@ -110,7 +110,7 @@ class Blog extends Page{
     *
     */
 	public function editPost($post_slug){
-		
+		echo "ajuneg aici urmand $post_slug";
 		//get the correct path to the new_post_entry.php template file
 		$path=substr(__DIR__,0, (strlen(__DIR__)-strlen("controller"))) . 'templates\edit_post_entry.php';
 		
@@ -133,8 +133,11 @@ class Blog extends Page{
 		
 		$bm=new BlogModel();
 		$result_from_db=$bm->getPost($post_slug);
-		//$this->renderSinglePost($result_from_db);
-				
+		
+		if(count($result_from_db)<1) { 
+			
+			self::renderPageNotFound();
+		}	
 		$new_content="";
 			
 	    foreach($result_from_db as $row){
@@ -203,7 +206,7 @@ class Blog extends Page{
 					$new_content.= "<td>".$row['Category']."</td>  ";
 					$new_content.= "<td>".$row['Author']."</td>  ";
 					$new_content.= "<td><a href=/myFrontController/blog/post/$slug_from_title>".$row['title']."</a></td> ";
-					$new_content.='<td><a href="/myFrontController/edit/blog/post/' . $slug_from_title . '">Edit</a></td>';
+					$new_content.='<td><a href="/myFrontController/edit/post/' . $slug_from_title . '">Edit</a></td>';
 					$new_content.= "</tr>";
 
 				}
@@ -242,6 +245,14 @@ class Blog extends Page{
 			
 			
 			
+	}
+	
+	
+	public function renderPageNotFound(){
+	
+		     Render::$content ="Page not found!";
+			Render::renderPage("user");
+	
 	}
 	
 	

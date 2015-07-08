@@ -62,8 +62,8 @@
 	    <action>renderPost</action>
 	</route>
 	<route name="Edit individual blog post">
-		<path>/edit/blog/post/{slug}</path>
-	    <path_regexp>/\/edit\/blog\/post\/[\w\-]+/i</path_regexp>
+		<path>/edit/post/{slug}</path>
+	    <path_regexp>/\/edit\/post\/[\w\-]+/i</path_regexp>
 	    <controllerClass>Blog</controllerClass>
 	    <action>editPost</action>
 	</route>
