@@ -6,6 +6,7 @@ class Render{
 
 	public static $content="";
 	public static $menu="templates\menu.php";
+	public static $menu_up="templates\menu_up.php";
 	
 	
 	public static function renderContent(){

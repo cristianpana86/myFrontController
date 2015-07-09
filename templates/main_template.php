@@ -49,7 +49,7 @@ a:hover, a:active {
 </div>
 
 <div id="menu">
-    <?php require $path . self::$menu; ?>
+    <?php require $path . self::$menu_up; ?>
 	  
 	  </br></br>
 </div>
