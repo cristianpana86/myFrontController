@@ -1,6 +1,7 @@
 <?php
 namespace CPANA\myFrontController\model;
 use PDO;
+use CPANA\myFrontController\model\SlugGenerator;
 
 class DBCon{
 
@@ -58,10 +59,10 @@ class DBCon{
     * @return   string $result  - result returned by SQL query
     *
     */
-	public function fetchPost($transformed_post_slug){
+	public function fetchPost($post_slug_from_url){
 	
-        $sth=$this->db->prepare("SELECT * FROM blogposts WHERE LOWER(title) = :transformed_blog_slug;");
-		$sth->bindParam(':transformed_blog_slug', $transformed_post_slug);
+        $sth=$this->db->prepare("SELECT * FROM blogposts WHERE slug = :post_slug_from_url;");
+		$sth->bindParam(':post_slug_from_url', $post_slug_from_url);
 						
 		$sth->execute();
 			
@@ -136,13 +137,16 @@ class DBCon{
     */
 	
 	public function updatePost($PostID,$Author,$Category,$Text,$Title){
-	
-		$stmt = $this->db->prepare("UPDATE blogposts SET Category=:field1, Author=:field2, ActualPost=:field3,title=:field4 WHERE Id=:field_id;");
+		
+		$new_slug=SlugGenerator::slugify($Title);
+		$stmt = $this->db->prepare("UPDATE blogposts SET Category=:field1, Author=:field2, ActualPost=:field3,title=:field4,slug=:field5 WHERE Id=:field_id;");
         $stmt->bindParam(':field_id',$PostID, PDO::PARAM_INT);
 	    $stmt->bindParam(':field1', $Category);
 		$stmt->bindParam(':field2', $Author);
 		$stmt->bindParam(':field3', $Text);
 		$stmt->bindParam(':field4', $Title);
+		$stmt->bindParam(':field5', $new_slug);
+		
 
 	   $stmt->execute();
         $affected_rows = $stmt->rowCount();

@@ -82,11 +82,11 @@ class BlogModel{
 	public function getPost($post_slug){
 	
 		
-		echo $post_slug;
+		$post_slug_from_url=$post_slug; //I want to make clear that $post_slug represents the slug from the requested URL
         $db=new DBCon();
-		$transformed_post_slug=str_replace('-',' ',$post_slug);
-		echo $transformed_post_slug;
-		$result=$db->fetchPost($transformed_post_slug);
+		//$transformed_post_slug=str_replace('-',' ',$post_slug);
+		
+		$result=$db->fetchPost($post_slug_from_url);
 		
 		return $result;
 	}

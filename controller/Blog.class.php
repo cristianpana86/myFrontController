@@ -51,8 +51,9 @@ class Blog extends Page{
 	public function saveEditPost(){
 	
 	   
-	   $bm=new BlogModel();
-	   $rows_affected=$bm->updatePost((integer)$_POST['postID'],$_POST['Author'],$_POST['Category'],$_POST['ActualPost'],$_POST['Title']);
+	    $bm=new BlogModel();
+	    $rows_affected=$bm->updatePost((integer)$_POST['postID'],$_POST['Author'],$_POST['Category'],$_POST['ActualPost'],$_POST['Title']);
+	    
 	  
 	   if($rows_affected==1){
 			if (LoginUser::validateLoginAdmin()){ Render::$menu="templates\menu_admin.php"; }
@@ -141,7 +142,7 @@ class Blog extends Page{
 				
 	    //get the correct path to the new_post_entry.php template file
 		$path=substr(__DIR__,0, (strlen(__DIR__)-strlen("controller"))) . 'templates\edit_post_entry.php';
-			//echo $post_slug;
+			
 		$bm=new BlogModel();
 		$result_from_db=$bm->getPost($post_slug);
 			
@@ -155,7 +156,7 @@ class Blog extends Page{
 			$title=$result_from_db[0]['title'];
 			$actual_content=$result_from_db[0]['ActualPost'];
 			$postID=$result_from_db[0]['Id'];
-				echo "$postID";
+		
 			//do not display now the content from the included file. the processed result is saved to be rendered inside the main template.
 			ob_start();
 			include $path;
@@ -185,7 +186,7 @@ class Blog extends Page{
 		$bm=new BlogModel();
 		$result_from_db=$bm->getPost($post_slug);
 			
-			var_dump($result_from_db);
+			
 		if(count($result_from_db)<1) { 
 			
 			self::renderPageNotFound();
