@@ -1,4 +1,4 @@
-<form action="http://127.0.0.1/myFrontController/admin/postOnBlog" method="POST">
+<form action="http://127.0.0.1/myFrontController/edit/saveEditPost" method="POST">
 	Categorie
 	<select name="Category">
 	<option value="Amuzante">Amuzante</option>
@@ -7,15 +7,13 @@
 	<option value="PHP">PHP</option>
 	</select></br>
 	Author
-	<input type="text" name="Author"></br>
+	<input type="text" name="Author" value=<?php echo '"'.$author.'"'; ?> ></br>
 	Title
-	<input type="text" name="Title"></br>
+	<input type="text" name="Title" value=<?php echo '"'.$title.'"'; ?> ></br>
 	Write here your actual blog post:</br>
-	<textarea name="ActualPost" rows="40" cols="90">write here...</textarea></br>
+	<textarea name="ActualPost" rows="40" cols="90"  ><?php echo $actual_content ; ?></textarea></br>
 	<button type="submit" >Send</button></br>
-	<input type="hidden" name="controller" value="Blog">
-	<input type="hidden" name="action" value="postOnBlog">
+	<input type="hidden" name="postID" value<?php echo '"'.$postID.'"'; ?>
 </form>
-
 
 

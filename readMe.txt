@@ -75,15 +75,27 @@ make all letters lower-case.
 I can list all the identic slugs, the issue appears when I want to edit.
 
 --------------------------------------------------------------------------------------------------------
---------- admin dashboard , edit posts, delete posts, publish? ------------------------------------------
+--------- admin dashboard , edit posts,delete posts, publish? ------------------------------------------
 ------------------------------------------------------------------------------------------------------------
 
-Between integrating edit buttons in the <Blog> view (when you click Blog button) of the Admin and creating a different view, I picked the
-first option for rapid development based on what it is already implemented. 
--wrong! I realized that for an Admin would be more relevant to see just the titles (not entire content as in normal view) and have an edit / delete/ publish button 
 
+For an Admin would be more relevant to see just the titles (not entire content as in normal view) and have an edit / delete/ publish button 
+1. Admin dashboard for editing posts
 - in the "render()" method of the class Blog, if the admin is logged Edit button is displayed otherwise normal listing of posts
 - new path /edit/{slug} should be added to route.xml as a result of the above
+2. Edit posts and save them to database
+- the edit post page should look exactly like the new post entry just that it should be populated with the values from DB. So I added
+the file "edit_post_entry.php" under templates, inside I added value=<?php echo '"'.$author.'"'; ?> (same for the title and category).
+- the problem is that now I do not want to take the file edit_post_entry.php end include it directly into the main template, 
+I want first to process it (interpret ) with the local variables in order to replace the actual "value=" in the HTML form.
+The post "Read echo'ed output from another PHP file" http://stackoverflow.com/questions/631388/read-echoed-output-from-another-php-file showed me the way:
+
+		ob_start(); // begin collecting output
+		include 'myfile.php';
+		$result = ob_get_clean(); // retrieve output from myfile.php, stop buffering
+		//$result will then contain the text.
+- as you could see the slug is used to identify uniquly the 
+3. Delete posts	
 ---------------------------------------------------------------------------------------------------------------
 to do also: - admin dashboard, edit posts, delete posts, publish 
 -tinyMCE

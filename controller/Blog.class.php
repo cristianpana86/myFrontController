@@ -47,6 +47,33 @@ class Blog extends Page{
 	* @param void
 	* @return void
     */
+	public function saveEditPost(){
+	
+	   
+	   $bm=new BlogModel();
+	   $rows_affected=$bm->newPost($_POST['Author'],$_POST['Category'],$_POST['ActualPost'],$_POST['Title']);
+	  
+	   if($rows_affected==1){
+			if (LoginUser::validateLoginAdmin()){ Render::$menu="templates\menu_admin.php"; }
+			Render::$content="you have successfully posted a new blog post!";
+			Render::renderPage("user");
+	       
+	   }else{
+	   
+			if (LoginUser::validateLoginAdmin()){ Render::$menu="templates\menu_admin.php"; }
+			Render::$content= "bad luck, there was an error....";
+			Render::renderPage("user");
+	   
+	       
+	   }
+	}
+	
+	/**
+    * postOnBlog method connects to the Database and writes the a new entry on the BlogPosts table 
+    *
+	* @param void
+	* @return void
+    */
 	public function postOnBlog(){
 	
 	   
@@ -110,17 +137,37 @@ class Blog extends Page{
     *
     */
 	public function editPost($post_slug){
-		echo "ajuneg aici urmand $post_slug";
-		//get the correct path to the new_post_entry.php template file
+				
+	    //get the correct path to the new_post_entry.php template file
 		$path=substr(__DIR__,0, (strlen(__DIR__)-strlen("controller"))) . 'templates\edit_post_entry.php';
-		
-		//reads the entire content of the file login.php in order to have it rendered
-		$text=file_get_contents($path);
-		
-		if (LoginUser::validateLoginAdmin()){ Render::$menu="templates\menu_admin.php"; }
-		Render::$content=$text;
-		Render::renderPage("user");
-	
+			//echo $post_slug;
+		$bm=new BlogModel();
+		$result_from_db=$bm->getPost($post_slug);
+			
+		if(count($result_from_db)<1) { 
+			
+			self::renderPageNotFound();
+		}else{
+			
+			echo "ajunge aici";
+			$author=$result_from_db[0]['Author'];
+			$title=$result_from_db[0]['title'];
+			$actual_content=$result_from_db[0]['ActualPost'];
+			$postID=$result_from_db[0]['Id'];
+				
+			//do not display now the content from the included file. the processed result is saved to be rendered inside the main template.
+			ob_start();
+			include $path;
+			$text = ob_get_clean(); 
+				
+			
+			//reads the entire content of the file edit_post_entry.php in order to have it rendered
+			//$text=file_get_contents($path);
+			
+			if (LoginUser::validateLoginAdmin()){ Render::$menu="templates\menu_admin.php"; }
+			Render::$content=$text;
+			Render::renderPage("user");
+	    }
 	}
 	/**
     * This method is used to create an BlogModel object and extract from database a specific blog post. The blog post slug is received as parameter

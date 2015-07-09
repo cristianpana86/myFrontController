@@ -81,7 +81,7 @@ class BlogModel{
     */
 	public function getPost($post_slug){
 	
-		
+		echo "slug-ul cerut este " . $post_slug;
 		
         $db=new DBCon();
 		$transformed_post_slug=str_replace('-',' ',$post_slug);
