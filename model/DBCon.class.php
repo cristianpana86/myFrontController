@@ -126,6 +126,49 @@ class DBCon{
 		return $affected_rows;
 	}
 	
+	/**
+    *
+    * Save the update post on database
+    * @copyright  2015 Cristian Pana 
+    * @param    integer $PostID, string $Author, string $Category, string $Text
+    * @return   integer
+    *
+    */
+	
+	public function updatePost($PostID,$Author,$Category,$Text,$Title){
+	
+		$stmt = $this->db->prepare("UPDATE blogposts SET Category=:field1, Author=:field2, ActualPost=:field3,title=:field4 WHERE Id=:field_id;");
+        $stmt->bindParam(':field_id',$PostID, PDO::PARAM_INT);
+	    $stmt->bindParam(':field1', $Category);
+		$stmt->bindParam(':field2', $Author);
+		$stmt->bindParam(':field3', $Text);
+		$stmt->bindParam(':field4', $Title);
+
+	   $stmt->execute();
+        $affected_rows = $stmt->rowCount();
+		return $affected_rows;
+	
+	}
+	
+	/**
+    *
+    * Delete post on database
+    * @copyright  2015 Cristian Pana 
+    * @param    integer $PostID
+    * @return   integer
+    *
+    */
+	
+	public function deletePost($PostID){
+	
+		$stmt = $this->db->prepare("DELETE FROM blogposts  WHERE Id=:field_id;");
+        $stmt->bindParam(':field_id',$PostID, PDO::PARAM_INT);
+	    
+	    $stmt->execute();
+        $affected_rows = $stmt->rowCount();
+		return $affected_rows;
+	
+	}
 
 }
 ?>

@@ -81,10 +81,11 @@ class BlogModel{
     */
 	public function getPost($post_slug){
 	
-		echo "slug-ul cerut este " . $post_slug;
 		
+		echo $post_slug;
         $db=new DBCon();
 		$transformed_post_slug=str_replace('-',' ',$post_slug);
+		echo $transformed_post_slug;
 		$result=$db->fetchPost($transformed_post_slug);
 		
 		return $result;
@@ -121,6 +122,41 @@ class BlogModel{
 	
 		$db=new DBCon();
 		$result=$db->newPost($Author,$Category,$Text,$Title);
+		
+		return $result;
+	}
+	
+	/**
+    *
+    * Connects to database and updates post
+    *
+    * @param    string $Author, string $Category, string $Text
+    * @return      array
+    *
+    */
+	
+	public function updatePost($PostID,$Author,$Category,$Text,$Title){
+	
+		$db=new DBCon();
+		$result=$db->updatePost($PostID,$Author,$Category,$Text,$Title);
+		
+		return $result;
+	}
+	
+	/**
+    *
+    * Connects to database and updates post
+    *
+    * @param    string $Author, string $Category, string $Text
+    * @return      array
+    *
+    */
+	
+	public function deletePost($PostID){
+	
+		$id=$PostID;
+		$db=new DBCon();
+		$result=$db->deletePost($id);
 		
 		return $result;
 	}

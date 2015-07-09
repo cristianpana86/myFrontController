@@ -67,6 +67,17 @@
 	    <controllerClass>Blog</controllerClass>
 	    <action>editPost</action>
 	</route>
+	<route name="Save edited post">
+		<path>/edit/save</path>
+	    <controllerClass>Blog</controllerClass>
+	    <action>saveEditPost</action>
+	</route>
+	<route name="Delete individual blog post">
+		<path>/delete/post/{slug}</path>
+	    <path_regexp>/\/delete\/post\/[\w\-]+/i</path_regexp>
+	    <controllerClass>Blog</controllerClass>
+	    <action>deletePost</action>
+	</route>
 	
 	
 </route_base>

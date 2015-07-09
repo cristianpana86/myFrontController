@@ -51,11 +51,11 @@ class Blog extends Page{
 	
 	   
 	   $bm=new BlogModel();
-	   $rows_affected=$bm->newPost($_POST['Author'],$_POST['Category'],$_POST['ActualPost'],$_POST['Title']);
+	   $rows_affected=$bm->updatePost((integer)$_POST['postID'],$_POST['Author'],$_POST['Category'],$_POST['ActualPost'],$_POST['Title']);
 	  
 	   if($rows_affected==1){
 			if (LoginUser::validateLoginAdmin()){ Render::$menu="templates\menu_admin.php"; }
-			Render::$content="you have successfully posted a new blog post!";
+			Render::$content="you have successfully updated the blog post!";
 			Render::renderPage("user");
 	       
 	   }else{
@@ -149,12 +149,12 @@ class Blog extends Page{
 			self::renderPageNotFound();
 		}else{
 			
-			echo "ajunge aici";
+			
 			$author=$result_from_db[0]['Author'];
 			$title=$result_from_db[0]['title'];
 			$actual_content=$result_from_db[0]['ActualPost'];
 			$postID=$result_from_db[0]['Id'];
-				
+				echo "$postID";
 			//do not display now the content from the included file. the processed result is saved to be rendered inside the main template.
 			ob_start();
 			include $path;
@@ -169,6 +169,39 @@ class Blog extends Page{
 			Render::renderPage("user");
 	    }
 	}
+	
+	
+	/**
+    * This method is used to delete a blog post. The blog post slug is received as parameter
+    *
+    * @param   string  $post_slug
+    * @return   void
+    *
+    */
+	public function deletePost($post_slug){
+				
+	    
+		$bm=new BlogModel();
+		$result_from_db=$bm->getPost($post_slug);
+			
+			var_dump($result_from_db);
+		if(count($result_from_db)<1) { 
+			
+			self::renderPageNotFound();
+		}else{
+						
+			$postID=$result_from_db[0]['Id'];
+			$result=$bm->deletePost($postID);
+			if(count($result)>0){
+			$text = "The post was successfully deleted";
+			}else{ $text="error";}
+			
+			if (LoginUser::validateLoginAdmin()){ Render::$menu="templates\menu_admin.php"; }
+			Render::$content=$text;
+			Render::renderPage("user");
+	    }
+	}
+	
 	/**
     * This method is used to create an BlogModel object and extract from database a specific blog post. The blog post slug is received as parameter
     *
@@ -244,7 +277,7 @@ class Blog extends Page{
 				
 				$bm=new BlogModel();
 				$result = $bm->getBlogPostsHeaders();// this function returns first 1000 posts found in the table
-				$new_content='<table  style="width:100%"><tr><th> Category  </th> <th> Author </th><td> Title </td><th></th></tr>';
+				$new_content='<table  style="width:100%"><tr><th> Category  </th> <th> Author </th><td> Title </td><th></th><th></th></tr>';
 				Render::$menu="templates\menu_admin.php";
 				
 				foreach($result as $row){
@@ -254,6 +287,7 @@ class Blog extends Page{
 					$new_content.= "<td>".$row['Author']."</td>  ";
 					$new_content.= "<td><a href=/myFrontController/blog/post/$slug_from_title>".$row['title']."</a></td> ";
 					$new_content.='<td><a href="/myFrontController/edit/post/' . $slug_from_title . '">Edit</a></td>';
+					$new_content.='<td><a href="/myFrontController/delete/post/' . $slug_from_title . '">Delete</a></td>';
 					$new_content.= "</tr>";
 
 				}
