@@ -118,10 +118,10 @@ class BlogModel{
     *
     */
 	
-	public function newPost($Author,$Category,$Text,$Title){
+	public function newPost($Author,$Category,$Text,$Title,$Slug){
 	
 		$db=new DBCon();
-		$result=$db->newPost($Author,$Category,$Text,$Title);
+		$result=$db->newPost($Author,$Category,$Text,$Title,$Slug);
 		
 		return $result;
 	}

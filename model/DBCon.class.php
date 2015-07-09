@@ -118,10 +118,10 @@ class DBCon{
     * @return   integer
     *
     */
-	public function newPost($Author,$Category,$Text,$Title){
+	public function newPost($Author,$Category,$Text,$Title, $Slug){
 	
-	    $stmt = $this->db->prepare("INSERT INTO blogposts (Category, Author, ActualPost,title) VALUES (:field1,:field2,:field3,:field4);");
-        $stmt->execute(array(':field1' => $Category, ':field2' => $Author, ':field3' => $Text,':field4'=>$Title));
+	    $stmt = $this->db->prepare("INSERT INTO blogposts (Category, Author, ActualPost,title,slug) VALUES (:field1,:field2,:field3,:field4,:field5);");
+        $stmt->execute(array(':field1' => $Category, ':field2' => $Author, ':field3' => $Text,':field4'=>$Title, ':field5' => $Slug));
         $affected_rows = $stmt->rowCount();
 		return $affected_rows;
 	}

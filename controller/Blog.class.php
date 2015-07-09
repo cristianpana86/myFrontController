@@ -5,6 +5,7 @@ namespace CPANA\myFrontController\controller;
 use CPANA\myFrontController\model\BlogModel;
 use CPANA\myFrontController\view\Render;
 use CPANA\myFrontController\login\LoginUser;
+use CPANA\myFrontController\model\SlugGenerator;
 
 /**
 * Blog class handles the behaviour of the "Blog" page
@@ -78,7 +79,7 @@ class Blog extends Page{
 	
 	   
 	   $bm=new BlogModel();
-	   $rows_affected=$bm->newPost($_POST['Author'],$_POST['Category'],$_POST['ActualPost'],$_POST['Title']);
+	   $rows_affected=$bm->newPost($_POST['Author'],$_POST['Category'],$_POST['ActualPost'],$_POST['Title'],SlugGenerator::slugify($_POST['Title']));
 	  
 	   if($rows_affected==1){
 			if (LoginUser::validateLoginAdmin()){ Render::$menu="templates\menu_admin.php"; }
@@ -228,7 +229,7 @@ class Blog extends Page{
 			  $new_content.= "<tr> Author </tr>";
 			  $new_content.= "<tr>".$row['Author']."</tr></br>";
 			  $new_content.= "<tr> Title </tr>";
-			  $slug_from_title=  strtolower(str_replace(' ','-',$row['title']));
+			  $slug_from_title=  SlugGenerator::slugify($row['title']);
 			  $new_content.= "<tr><a href=/myFrontController/blog/post/$slug_from_title>".$row['title']."</a></tr></br>";
 			  $new_content.= "<tr> Post </tr> </br>";
 			  $new_content.= "<tr>".$row['ActualPost']."</tr></br>";
@@ -281,7 +282,7 @@ class Blog extends Page{
 				Render::$menu="templates\menu_admin.php";
 				
 				foreach($result as $row){
-					$slug_from_title=  strtolower(str_replace(' ','-',$row['title']));
+					$slug_from_title=  SlugGenerator::slugify($row['title']);
 					$new_content.= "<tr> ";
 					$new_content.= "<td>".$row['Category']."</td>  ";
 					$new_content.= "<td>".$row['Author']."</td>  ";
@@ -303,7 +304,7 @@ class Blog extends Page{
 				$new_content="";
 				foreach($result as $row){
 					 
-					 $slug_from_title=  strtolower(str_replace(' ','-',$row['title']));
+					 $slug_from_title=  SlugGenerator::slugify($row['title']);
 					 
 					 
 					  $new_content.= "<tr> Category  </tr> ";

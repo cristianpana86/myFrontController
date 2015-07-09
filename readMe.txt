@@ -94,15 +94,31 @@ The post "Read echo'ed output from another PHP file" http://stackoverflow.com/qu
 		include 'myfile.php';
 		$result = ob_get_clean(); // retrieve output from myfile.php, stop buffering
 		//$result will then contain the text.
-- as you could see the slug is used to identify uniquly the 
+- as you could see the slug is used to identify uniquely the post. If the admin wants to change the title of the blog this unique identifier is lost.
+I will put in the form (edit_post_entry.php) a hidden field to store the post Id taken from database which will be used in the SQL update statement:
+
+	$stmt = $this->db->prepare("UPDATE blogposts SET Category=:field1, Author=:field2, ActualPost=:field3,title=:field4 WHERE Id=:field_id;");
+    $stmt->bindParam(':field_id',$PostID, PDO::PARAM_INT);
+	$stmt->bindParam(':field1', $Category);
+	$stmt->bindParam(':field2', $Author);
+	$stmt->bindParam(':field3', $Text);
+	$stmt->bindParam(':field4', $Title);
+
+	$stmt->execute();
+
 3. Delete posts	
+
+//I discovered a bug. Because I always replace spaces with hyphen, if a title is using hyphen it will be replaced with space
+when transforming it and cannot be found./////
+
 ---------------------------------------------------------------------------------------------------------------
 to do also: - admin dashboard, edit posts, delete posts, publish 
 -tinyMCE
 -uploading and storing photos
 -modify database, add more fields
 --- real slug generator!!!!!! the titles may contain forbidden characters possible solution:  http://code.google.com/p/php-slugs/
-
+------ Controller too fat!! some stuff should be moved to View
+------ Model should contain functions like selectPost, selectAllPosts, UpdatePost, DeletePost
 
 -------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------
