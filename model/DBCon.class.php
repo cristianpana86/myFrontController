@@ -1,6 +1,7 @@
 <?php
 namespace CPANA\myFrontController\model;
 use PDO;
+use CPANA\myFrontController\model\SlugGenerator;
 
 class DBCon{
 
@@ -58,10 +59,10 @@ class DBCon{
     * @return   string $result  - result returned by SQL query
     *
     */
-	public function fetchPost($transformed_post_slug){
+	public function fetchPost($post_slug_from_url){
 	
-        $sth=$this->db->prepare("SELECT * FROM blogposts WHERE LOWER(title) = :transformed_blog_slug;");
-		$sth->bindParam(':transformed_blog_slug', $transformed_post_slug);
+        $sth=$this->db->prepare("SELECT * FROM blogposts WHERE slug = :post_slug_from_url;");
+		$sth->bindParam(':post_slug_from_url', $post_slug_from_url);
 						
 		$sth->execute();
 			
@@ -118,14 +119,60 @@ class DBCon{
     * @return   integer
     *
     */
-	public function newPost($Author,$Category,$Text,$Title){
+	public function newPost($Author,$Category,$Text,$Title, $Slug){
 	
-	    $stmt = $this->db->prepare("INSERT INTO blogposts (Category, Author, ActualPost,title) VALUES (:field1,:field2,:field3,:field4);");
-        $stmt->execute(array(':field1' => $Category, ':field2' => $Author, ':field3' => $Text,':field4'=>$Title));
+	    $stmt = $this->db->prepare("INSERT INTO blogposts (Category, Author, ActualPost,title,slug) VALUES (:field1,:field2,:field3,:field4,:field5);");
+        $stmt->execute(array(':field1' => $Category, ':field2' => $Author, ':field3' => $Text,':field4'=>$Title, ':field5' => $Slug));
         $affected_rows = $stmt->rowCount();
 		return $affected_rows;
 	}
 	
+	/**
+    *
+    * Save the update post on database
+    * @copyright  2015 Cristian Pana 
+    * @param    integer $PostID, string $Author, string $Category, string $Text
+    * @return   integer
+    *
+    */
+	
+	public function updatePost($PostID,$Author,$Category,$Text,$Title){
+		
+		$new_slug=SlugGenerator::slugify($Title);
+		$stmt = $this->db->prepare("UPDATE blogposts SET Category=:field1, Author=:field2, ActualPost=:field3,title=:field4,slug=:field5 WHERE Id=:field_id;");
+        $stmt->bindParam(':field_id',$PostID, PDO::PARAM_INT);
+	    $stmt->bindParam(':field1', $Category);
+		$stmt->bindParam(':field2', $Author);
+		$stmt->bindParam(':field3', $Text);
+		$stmt->bindParam(':field4', $Title);
+		$stmt->bindParam(':field5', $new_slug);
+		
+
+	   $stmt->execute();
+        $affected_rows = $stmt->rowCount();
+		return $affected_rows;
+	
+	}
+	
+	/**
+    *
+    * Delete post on database
+    * @copyright  2015 Cristian Pana 
+    * @param    integer $PostID
+    * @return   integer
+    *
+    */
+	
+	public function deletePost($PostID){
+	
+		$stmt = $this->db->prepare("DELETE FROM blogposts  WHERE Id=:field_id;");
+        $stmt->bindParam(':field_id',$PostID, PDO::PARAM_INT);
+	    
+	    $stmt->execute();
+        $affected_rows = $stmt->rowCount();
+		return $affected_rows;
+	
+	}
 
 }
 ?>

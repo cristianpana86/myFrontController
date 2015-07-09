@@ -5,6 +5,7 @@ namespace CPANA\myFrontController\controller;
 use CPANA\myFrontController\model\BlogModel;
 use CPANA\myFrontController\view\Render;
 use CPANA\myFrontController\login\LoginUser;
+use CPANA\myFrontController\model\SlugGenerator;
 
 /**
 * Blog class handles the behaviour of the "Blog" page
@@ -47,11 +48,39 @@ class Blog extends Page{
 	* @param void
 	* @return void
     */
+	public function saveEditPost(){
+	
+	   
+	    $bm=new BlogModel();
+	    $rows_affected=$bm->updatePost((integer)$_POST['postID'],$_POST['Author'],$_POST['Category'],$_POST['ActualPost'],$_POST['Title']);
+	    
+	  
+	   if($rows_affected==1){
+			if (LoginUser::validateLoginAdmin()){ Render::$menu="templates\menu_admin.php"; }
+			Render::$content="you have successfully updated the blog post!";
+			Render::renderPage("user");
+	       
+	   }else{
+	   
+			if (LoginUser::validateLoginAdmin()){ Render::$menu="templates\menu_admin.php"; }
+			Render::$content= "bad luck, there was an error....";
+			Render::renderPage("user");
+	   
+	       
+	   }
+	}
+	
+	/**
+    * postOnBlog method connects to the Database and writes the a new entry on the BlogPosts table 
+    *
+	* @param void
+	* @return void
+    */
 	public function postOnBlog(){
 	
 	   
 	   $bm=new BlogModel();
-	   $rows_affected=$bm->newPost($_POST['Author'],$_POST['Category'],$_POST['ActualPost'],$_POST['Title']);
+	   $rows_affected=$bm->newPost($_POST['Author'],$_POST['Category'],$_POST['ActualPost'],$_POST['Title'],SlugGenerator::slugify($_POST['Title']));
 	  
 	   if($rows_affected==1){
 			if (LoginUser::validateLoginAdmin()){ Render::$menu="templates\menu_admin.php"; }
@@ -110,18 +139,71 @@ class Blog extends Page{
     *
     */
 	public function editPost($post_slug){
-		echo "ajuneg aici urmand $post_slug";
-		//get the correct path to the new_post_entry.php template file
+				
+	    //get the correct path to the new_post_entry.php template file
 		$path=substr(__DIR__,0, (strlen(__DIR__)-strlen("controller"))) . 'templates\edit_post_entry.php';
+			
+		$bm=new BlogModel();
+		$result_from_db=$bm->getPost($post_slug);
+			
+		if(count($result_from_db)<1) { 
+			
+			self::renderPageNotFound();
+		}else{
+			
+			
+			$author=$result_from_db[0]['Author'];
+			$title=$result_from_db[0]['title'];
+			$actual_content=$result_from_db[0]['ActualPost'];
+			$postID=$result_from_db[0]['Id'];
 		
-		//reads the entire content of the file login.php in order to have it rendered
-		$text=file_get_contents($path);
-		
-		if (LoginUser::validateLoginAdmin()){ Render::$menu="templates\menu_admin.php"; }
-		Render::$content=$text;
-		Render::renderPage("user");
-	
+			//do not display now the content from the included file. the processed result is saved to be rendered inside the main template.
+			ob_start();
+			include $path;
+			$text = ob_get_clean(); 
+				
+			
+			//reads the entire content of the file edit_post_entry.php in order to have it rendered
+			//$text=file_get_contents($path);
+			
+			if (LoginUser::validateLoginAdmin()){ Render::$menu="templates\menu_admin.php"; }
+			Render::$content=$text;
+			Render::renderPage("user");
+	    }
 	}
+	
+	
+	/**
+    * This method is used to delete a blog post. The blog post slug is received as parameter
+    *
+    * @param   string  $post_slug
+    * @return   void
+    *
+    */
+	public function deletePost($post_slug){
+				
+	    
+		$bm=new BlogModel();
+		$result_from_db=$bm->getPost($post_slug);
+			
+			
+		if(count($result_from_db)<1) { 
+			
+			self::renderPageNotFound();
+		}else{
+						
+			$postID=$result_from_db[0]['Id'];
+			$result=$bm->deletePost($postID);
+			if(count($result)>0){
+			$text = "The post was successfully deleted";
+			}else{ $text="error";}
+			
+			if (LoginUser::validateLoginAdmin()){ Render::$menu="templates\menu_admin.php"; }
+			Render::$content=$text;
+			Render::renderPage("user");
+	    }
+	}
+	
 	/**
     * This method is used to create an BlogModel object and extract from database a specific blog post. The blog post slug is received as parameter
     *
@@ -148,7 +230,7 @@ class Blog extends Page{
 			  $new_content.= "<tr> Author </tr>";
 			  $new_content.= "<tr>".$row['Author']."</tr></br>";
 			  $new_content.= "<tr> Title </tr>";
-			  $slug_from_title=  strtolower(str_replace(' ','-',$row['title']));
+			  $slug_from_title=  SlugGenerator::slugify($row['title']);
 			  $new_content.= "<tr><a href=/myFrontController/blog/post/$slug_from_title>".$row['title']."</a></tr></br>";
 			  $new_content.= "<tr> Post </tr> </br>";
 			  $new_content.= "<tr>".$row['ActualPost']."</tr></br>";
@@ -197,16 +279,17 @@ class Blog extends Page{
 				
 				$bm=new BlogModel();
 				$result = $bm->getBlogPostsHeaders();// this function returns first 1000 posts found in the table
-				$new_content='<table  style="width:100%"><tr><th> Category  </th> <th> Author </th><td> Title </td><th></th></tr>';
+				$new_content='<table  style="width:100%"><tr><th> Category  </th> <th> Author </th><td> Title </td><th></th><th></th></tr>';
 				Render::$menu="templates\menu_admin.php";
 				
 				foreach($result as $row){
-					$slug_from_title=  strtolower(str_replace(' ','-',$row['title']));
+					$slug_from_title=  SlugGenerator::slugify($row['title']);
 					$new_content.= "<tr> ";
 					$new_content.= "<td>".$row['Category']."</td>  ";
 					$new_content.= "<td>".$row['Author']."</td>  ";
 					$new_content.= "<td><a href=/myFrontController/blog/post/$slug_from_title>".$row['title']."</a></td> ";
 					$new_content.='<td><a href="/myFrontController/edit/post/' . $slug_from_title . '">Edit</a></td>';
+					$new_content.='<td><a href="/myFrontController/delete/post/' . $slug_from_title . '">Delete</a></td>';
 					$new_content.= "</tr>";
 
 				}
@@ -222,7 +305,7 @@ class Blog extends Page{
 				$new_content="";
 				foreach($result as $row){
 					 
-					 $slug_from_title=  strtolower(str_replace(' ','-',$row['title']));
+					 $slug_from_title=  SlugGenerator::slugify($row['title']);
 					 
 					 
 					  $new_content.= "<tr> Category  </tr> ";

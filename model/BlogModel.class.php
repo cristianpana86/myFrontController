@@ -82,10 +82,11 @@ class BlogModel{
 	public function getPost($post_slug){
 	
 		
-		
+		$post_slug_from_url=$post_slug; //I want to make clear that $post_slug represents the slug from the requested URL
         $db=new DBCon();
-		$transformed_post_slug=str_replace('-',' ',$post_slug);
-		$result=$db->fetchPost($transformed_post_slug);
+		//$transformed_post_slug=str_replace('-',' ',$post_slug);
+		
+		$result=$db->fetchPost($post_slug_from_url);
 		
 		return $result;
 	}
@@ -117,10 +118,45 @@ class BlogModel{
     *
     */
 	
-	public function newPost($Author,$Category,$Text,$Title){
+	public function newPost($Author,$Category,$Text,$Title,$Slug){
 	
 		$db=new DBCon();
-		$result=$db->newPost($Author,$Category,$Text,$Title);
+		$result=$db->newPost($Author,$Category,$Text,$Title,$Slug);
+		
+		return $result;
+	}
+	
+	/**
+    *
+    * Connects to database and updates post
+    *
+    * @param    string $Author, string $Category, string $Text
+    * @return      array
+    *
+    */
+	
+	public function updatePost($PostID,$Author,$Category,$Text,$Title){
+	
+		$db=new DBCon();
+		$result=$db->updatePost($PostID,$Author,$Category,$Text,$Title);
+		
+		return $result;
+	}
+	
+	/**
+    *
+    * Connects to database and updates post
+    *
+    * @param    string $Author, string $Category, string $Text
+    * @return      array
+    *
+    */
+	
+	public function deletePost($PostID){
+	
+		$id=$PostID;
+		$db=new DBCon();
+		$result=$db->deletePost($id);
 		
 		return $result;
 	}

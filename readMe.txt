@@ -70,27 +70,61 @@ make all letters lower-case.
 
 			$slug_from_title=  strtolower(str_replace(' ','-',$row['title']));
 			$new_content.= "<tr><a href=/myFrontController/blog/post/$slug_from_title>".$row['title']."</a></tr></br>";
-- further improvement should be done in for a proper slug generator (treat all signs and also transform language specific signs to the closest ASCII charachter)
-- other improvement on having unique slugs from blog posts with same title (maybe adding a timestamp or at least day and month). when viewing it's ok
-I can list all the identic slugs, the issue appears when I want to edit.
+!!! further improvement should be done in for a proper slug generator (treat all signs and also transform language specific signs to the closest ASCII charachter)
+!!! other improvement on having unique slugs from blog posts with same title (maybe adding a timestamp or at least day and month). when viewing it's ok
+!!!I can list all the identic slugs, the issue appears when I want to edit.
+
+I solved the problems saving in the "blogposts" table the slug in the newly added column "slug". I also added in \model the class SlugGenerator
+with a static function slugify($title) which treats all the problems with characters whcih may be included in the title of a post
 
 --------------------------------------------------------------------------------------------------------
---------- admin dashboard , edit posts, delete posts, publish? ------------------------------------------
+--------- admin dashboard , edit posts,delete posts, publish? ------------------------------------------
 ------------------------------------------------------------------------------------------------------------
 
-Between integrating edit buttons in the <Blog> view (when you click Blog button) of the Admin and creating a different view, I picked the
-first option for rapid development based on what it is already implemented. 
--wrong! I realized that for an Admin would be more relevant to see just the titles (not entire content as in normal view) and have an edit / delete/ publish button 
 
+For an Admin would be more relevant to see just the titles (not entire content as in normal view) and have an edit / delete/ publish button 
+1. Admin dashboard for editing posts
 - in the "render()" method of the class Blog, if the admin is logged Edit button is displayed otherwise normal listing of posts
 - new path /edit/{slug} should be added to route.xml as a result of the above
+2. Edit posts and save them to database
+- the edit post page should look exactly like the new post entry just that it should be populated with the values from DB. So I added
+the file "edit_post_entry.php" under templates, inside I added value=<?php echo '"'.$author.'"'; ?> (same for the title and category).
+- the problem is that now I do not want to take the file edit_post_entry.php end include it directly into the main template, 
+I want first to process it (interpret ) with the local variables in order to replace the actual "value=" in the HTML form.
+The post "Read echo'ed output from another PHP file" http://stackoverflow.com/questions/631388/read-echoed-output-from-another-php-file showed me the way:
+
+		ob_start(); // begin collecting output
+		include 'myfile.php';
+		$result = ob_get_clean(); // retrieve output from myfile.php, stop buffering
+		//$result will then contain the text.
+- as you could see the slug is used to identify uniquely the post. If the admin wants to change the title of the blog this unique identifier is lost.
+I will put in the form (edit_post_entry.php) a hidden field to store the post Id taken from database which will be used in the SQL update statement:
+
+		$new_slug=SlugGenerator::slugify($Title);
+		$stmt = $this->db->prepare("UPDATE blogposts SET Category=:field1, Author=:field2, ActualPost=:field3,title=:field4,slug=:field5 WHERE Id=:field_id;");
+        $stmt->bindParam(':field_id',$PostID, PDO::PARAM_INT);
+	    $stmt->bindParam(':field1', $Category);
+		$stmt->bindParam(':field2', $Author);
+		$stmt->bindParam(':field3', $Text);
+		$stmt->bindParam(':field4', $Title);
+		$stmt->bindParam(':field5', $new_slug);
+	
+
+	$stmt->execute();
+
+3. Delete posts	
+
+//I discovered a bug. Because I always replace spaces with hyphen, if a title is using hyphen it will be replaced with space
+when transforming it and cannot be found./////
+
 ---------------------------------------------------------------------------------------------------------------
 to do also: - admin dashboard, edit posts, delete posts, publish 
 -tinyMCE
 -uploading and storing photos
 -modify database, add more fields
 --- real slug generator!!!!!! the titles may contain forbidden characters possible solution:  http://code.google.com/p/php-slugs/
-
+------ Controller too fat!! some stuff should be moved to View
+------ Model should contain functions like selectPost, selectAllPosts, UpdatePost, DeletePost
 
 -------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------
