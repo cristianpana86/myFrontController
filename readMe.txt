@@ -130,8 +130,27 @@ my command to fix the errors was:
 
 inside the file "phpcbf.bat" you may need to add manually the path to php.exe and to phpcbf (with no extension)
 
+---------------------------------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------- PHP Documentor  -----------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------
+-Install via composer
+$ composer require "phpdocumentor/phpdocumentor:2.*"
 
----------------------------------------------------------------------------------------------------------------
+From official documentation http://www.phpdoc.org/docs/latest/guides/running-phpdocumentor.html :
+
+		When running phpDocumentor there are three command-line options that are essential:
+
+			-d, specifies the directory, or directories, of your project that you want to document.
+			-f, specifies a specific file, or files, in your project that you want to document.
+			-t, specifies the location where your documentation will be written (also called ‘target folder’).
+
+		The above options are all you need to generate your documentation as demonstrated in this example:
+
+		$ phpdoc -d path/to/my/project -f path/to/an/additional/file -t path/to/my/output/folder
+
+I executed first time  the command only with the first argument which saved me the results in   %USERPROFILE%\output\
+
+----------------------------------------------------------------------------------------------------------------------
 to do also: - admin dashboard, edit posts, delete posts, publish 
 -tinyMCE
 -uploading and storing photos
