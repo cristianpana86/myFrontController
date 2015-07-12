@@ -15,5 +15,3 @@
 	<button type="submit" >Send</button></br>
 	<input type="hidden" name="postID" value=<?php echo '"'.$postID.'"'; ?> >
 </form>
-
-

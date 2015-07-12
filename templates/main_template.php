@@ -56,12 +56,12 @@ a:hover, a:active {
 
 
 <div id="nav">
-	<?php require $path . self::$menu; ?>
+    <?php require $path . self::$menu; ?>
 </div>
 
 <div id="section">
 
-	<?php require 'content.php'; ?>
+    <?php require 'content.php'; ?>
 
 </div>
 

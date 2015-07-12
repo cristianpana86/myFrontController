@@ -1,6 +1,6 @@
 <?php
-  try
-  {
+try
+{
     //open the database
     $db = new PDO('sqlite:BlogDb_PDO.sqlite');
 
@@ -8,8 +8,10 @@
     $db->exec("CREATE TABLE BlogPosts (Id INTEGER PRIMARY KEY, Category TEXT, Author TEXT, ActualPost TEXT)");    
 
     //insert some data...
-    $db->exec("INSERT INTO BlogPosts (Category, Author, ActualPost) VALUES ('Vacataion','Admin','sa va povestesc cum a fost in vacanta, super aventuri am trait');".
-               "INSERT INTO BlogPosts (Category, Author, ActualPost) VALUES ('Amuzante', 'SpecialGuest', 'De cati politisti e nevoie sa insurubezi un bec'); " );
+    $db->exec(
+        "INSERT INTO BlogPosts (Category, Author, ActualPost) VALUES ('Vacataion','Admin','sa va povestesc cum a fost in vacanta, super aventuri am trait');".
+        "INSERT INTO BlogPosts (Category, Author, ActualPost) VALUES ('Amuzante', 'SpecialGuest', 'De cati politisti e nevoie sa insurubezi un bec'); " 
+    );
                
     //now output the data to a simple html table...
     print "<table border=1>";
@@ -17,18 +19,18 @@
     $result = $db->query('SELECT * FROM BlogPosts');
     foreach($result as $row)
     {
-      print "<tr><td>".$row['Id']."</td>";
-      print "<td>".$row['Category']."</td>";
-      print "<td>".$row['Author']."</td>";
-      print "<td>".$row['ActualPost']."</td></tr>";
+        print "<tr><td>".$row['Id']."</td>";
+        print "<td>".$row['Category']."</td>";
+        print "<td>".$row['Author']."</td>";
+        print "<td>".$row['ActualPost']."</td></tr>";
     }
     print "</table>";
 
     // close the database connection
-    $db = NULL;
-  }
-  catch(PDOException $e)
-  {
+    $db = null;
+}
+catch(PDOException $e)
+{
     print 'Exception : '.$e->getMessage();
-  }
+}
 ?>

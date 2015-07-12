@@ -117,6 +117,20 @@ I will put in the form (edit_post_entry.php) a hidden field to store the post Id
 //I discovered a bug. Because I always replace spaces with hyphen, if a title is using hyphen it will be replaced with space
 when transforming it and cannot be found./////
 
+----------------------------------------------------------------------------------------------------------------------------------
+-----------------------  code Sniffers, Standards and Code Beautifier and Fixer  -----------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------
+
+I finally managed to have the code beautifier and fixer (phpcbf from squizlab) work. On Windows machines there is a problem with the --diff option, you need to
+specify  "--no-patch" http://stackoverflow.com/questions/24015486/fixing-psr2-errors-with-phpcbf-phar
+
+my command to fix the errors was:
+
+"path to phpcbf.bat"  "fix" "--no-ansi" "--verbose" "--dry-run" "--no-patch" "--format=xml" "--no-interaction" "--level=psr2" "--config=sf20" "C:\Program Files (x86)\EasyPHP-DevServer-14.1VC9\data\localweb\myFrontController"
+
+inside the file "phpcbf.bat" you may need to add manually the path to php.exe and to phpcbf (with no extension)
+
+
 ---------------------------------------------------------------------------------------------------------------
 to do also: - admin dashboard, edit posts, delete posts, publish 
 -tinyMCE
