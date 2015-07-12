@@ -1,37 +1,40 @@
 <?php
 namespace CPANA\myFrontController\model;
 
-class StaticPages{
+class StaticPages
+{
 
-    public function __construct(){
-	
-	   // require_once 'DBCon.class.php';
-	}
+    public function __construct()
+    {
+    
+        // require_once 'DBCon.class.php';
+    }
 
-	/**
-    *
+    /**
     * Connects to database and fetches the text for static page 'Home'
     *
-    * @param    void
-    * @return      string
-    *
+    * @param  void
+    * @return string
     */
-	public function getHome(){
+    public function getHome()
+    {
 
         $db=new DBCon();
-		$result=$db->fetchStaticPagesInfo('Home');
-		
-		return $result;
-	}
+        $result=$db->fetchStaticPagesInfo('Home');
+        
+        return $result;
+    }
 
-	public function getAbout(){
+    public function getAbout()
+    {
 
 
-	}
+    }
 
-	public function getContact(){
+    public function getContact()
+    {
 
-	}
+    }
 
 }
 

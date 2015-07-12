@@ -1,14 +1,16 @@
 <?php
 namespace CPANA\myFrontController\controller;
 
-class Page{
+class Page
+{
 
    
-	
-	public function __construct(){
-	
-	   
-	}
+    
+    public function __construct()
+    {
+    
+       
+    }
 }
 
 ?>
