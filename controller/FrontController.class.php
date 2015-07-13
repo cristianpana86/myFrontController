@@ -21,12 +21,9 @@ class FrontController
     
     public function __construct()
     {
-        
-        $request_uri=$_SERVER['REQUEST_URI'];
-        
-        $this->relative_url=substr($request_uri, strpos($request_uri, '/', 1));
-        
-        
+                        
+        $this->relative_url=$_SERVER['REQUEST_URI'];
+		        
     }
     
     /**

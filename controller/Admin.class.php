@@ -1,4 +1,5 @@
 <?php
+
 namespace CPANA\myFrontController\controller;
 
 use CPANA\myFrontController\login\LoginUser;
@@ -17,15 +18,18 @@ class Admin
     public function renderLogin()
     {
     
+	
         //if already logged in (the cookie is  set and cookie value is correct) than redirect automatically to /admin/home
         if(isset($_COOKIE['PageLogin'])) {
+		
         
             if(LoginUser::validateCookie($_COOKIE['PageLogin'])) {
-                header('Location:http://127.0.0.1/myFrontController/admin/home');
+			echo "redirect to /admin/home";
+                header("Location: /admin/home");
                 die();
             }else{
-                echo "ajunge pe aici";
-                header('Location: http://127.0.0.1/myFrontController/');
+                //echo "ajunge pe aici";
+                header("Location: /");
                 die();
             }
     
@@ -34,12 +38,11 @@ class Admin
         
             //if $_POST['username'] and $_POST['password'] exist try to login
             if(isset($_POST['username'])&isset($_POST['password'])) {
-                //echo "user si pass sunt setate ". $_POST['username'];
-                
+                               
                 if(LoginUser::login($_POST['username'], $_POST['password'])) {
                     
                     
-                    header('Location:http://127.0.0.1/myFrontController/admin/home');
+                    header("Location: /admin/home");
                     die();
                 }else{
                     Render::$content="Wrong user or password";
@@ -81,50 +84,31 @@ class Admin
         if(isset($_COOKIE['PageLogin'])) {
         
             if(LoginUser::validateCookie($_COOKIE['PageLogin'])) {
-            
+				
                 Render::$menu="templates\menu_admin.php";
                 Render::$content="Bun venit Admin";
                 Render::renderPage("admin");
                 
             }else{
                 echo "ajunge pe aici";
-                header('Location: http://127.0.0.1/myFrontController/');
+                header('Location: /');
                 die();
             }
     
         }else{
-            //header('Location: index.php');
-            //die();
+            header('Location: /');
+            die();
         }
         
 
     }
     
-    /**
-    * If cookie already set and match correct cookie than redirects to index_admin.php
-    * otherwise show the login form
-    * set cookie 
-    * @param   void
-    * @return      void
-    */
-    public function validateLogin()
-    {
-    
-        //include 'C:\Program Files (x86)\EasyPHP-DevServer-14.1VC9\data\localweb\myFrontController\login\LoginUser.class.php';
-    
-        if($_SERVER['REQUEST_METHOD']=='POST') {
-            
-            $lu=new LoginUser();
-            $lu->login($_POST['username'], $_POST['password']);
-        }
-        
-    }
-    
+       
     
     public function logOut()
     {
         LoginUser::expireCookie();
-        header('Location: http://127.0.0.1/myFrontController/');
+        header('Location: /');
         die();
     
     }

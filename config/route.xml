@@ -18,7 +18,7 @@
 	</route>
 	
 	<route name="admin_login_page">
-       <path>/admin/</path>
+       <path>/admin</path>
 	   <controllerClass>Admin</controllerClass>
 	   <action>renderLogin</action>
 	</route>
