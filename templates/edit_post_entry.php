@@ -1,4 +1,4 @@
-<form action="http://127.0.0.1/myFrontController/edit/save" method="POST">
+<form action="/edit/save" method="POST">
 	Categorie
 	<select name="Category">
 	<option value="Amuzante">Amuzante</option>

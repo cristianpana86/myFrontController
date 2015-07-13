@@ -241,13 +241,13 @@ class Blog extends Page
             $new_content.= "<tr>".$row['Author']."</tr></br>";
             $new_content.= "<tr> Title </tr>";
             $slug_from_title=  SlugGenerator::slugify($row['title']);
-            $new_content.= "<tr><a href=/myFrontController/blog/post/$slug_from_title>".$row['title']."</a></tr></br>";
+            $new_content.= "<tr><a href=/blog/post/$slug_from_title>".$row['title']."</a></tr></br>";
             $new_content.= "<tr> Post </tr> </br>";
             $new_content.= "<tr>".$row['ActualPost']."</tr></br>";
             $new_content.= "</br></br></br>";
         }
         $new_content.= "</table><br>";
-        $new_content.="<a href=/myFrontController/blog>Back</a>";
+        $new_content.="<a href=/blog>Back</a>";
         ////////////////
         if (LoginUser::validateLoginAdmin()) { Render::$menu="templates\menu_admin.php"; 
         }
@@ -298,15 +298,15 @@ class Blog extends Page
                 $new_content.= "<tr> ";
                 $new_content.= "<td>".$row['Category']."</td>  ";
                 $new_content.= "<td>".$row['Author']."</td>  ";
-                $new_content.= "<td><a href=/myFrontController/blog/post/$slug_from_title>".$row['title']."</a></td> ";
-                $new_content.='<td><a href="/myFrontController/edit/post/' . $slug_from_title . '">Edit</a></td>';
-                $new_content.='<td><a href="/myFrontController/delete/post/' . $slug_from_title . '">Delete</a></td>';
+                $new_content.= "<td><a href=/blog/post/$slug_from_title>".$row['title']."</a></td> ";
+                $new_content.='<td><a href="/edit/post/' . $slug_from_title . '">Edit</a></td>';
+                $new_content.='<td><a href="/delete/post/' . $slug_from_title . '">Delete</a></td>';
                 $new_content.= "</tr>";
 
             }
             $new_content.= "<tr></table>";
             $new_content.= "</br></br></br>";
-            $new_content.="<a href=/myFrontController/blog/older>Older posts</a>&nbsp;&nbsp;&nbsp;<a href=/myFrontController/blog/newer>Newer posts</a> ";
+            $new_content.="<a href=/blog/older>Older posts</a>&nbsp;&nbsp;&nbsp;<a href=/blog/newer>Newer posts</a> ";
 
                 
         }else{
@@ -325,13 +325,13 @@ class Blog extends Page
                 $new_content.= "<tr>".$row['Author']."</tr></br>";
                 $new_content.= "<tr> Title </tr>";
                       
-                $new_content.= "<tr><a href=/myFrontController/blog/post/$slug_from_title>".$row['title']."</a></tr></br>";
+                $new_content.= "<tr><a href=/blog/post/$slug_from_title>".$row['title']."</a></tr></br>";
                 $new_content.= "<tr> Post </tr> </br>";
                 $new_content.= "<tr>".$row['ActualPost']."</tr></br>";
                 $new_content.= "</br></br></br>";
             }
             $new_content.= "</table><br>";
-            $new_content.="<a href=/myFrontController/blog/older>Older posts</a>&nbsp;&nbsp;&nbsp;<a href=/myFrontController/blog/newer>Newer posts</a> ";
+            $new_content.="<a href=/blog/older>Older posts</a>&nbsp;&nbsp;&nbsp;<a href=/myFrontController/blog/newer>Newer posts</a> ";
         }
         ////////////////
         Render::$content =$new_content;

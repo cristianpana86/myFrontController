@@ -1,6 +1,73 @@
 -------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------
+----------------------  Changes in version 0.5  -------------------------------------
+-------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------
+to do also: 
+-validate input
+-tinyMCE
+-uploading and storing photos
+-modify database, add more fields
+- Controller too fat!! some stuff should be moved to View
+- Model should contain functions like selectPost, selectAllPosts, UpdatePost, DeletePost
+---------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------
+----------------- change the absolute paths to a relative path, use virtual host from EasyPHP-----------------
+--------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------
+-install the module Virtual Host Manager from: http://www.easyphp.org/save-module-virtualhostsmanager-vc9-latest.php
+- create a virtual host
+- 'Location:http://127.0.0.1/myFrontController/admin/home' changed to "Location: /" in Admin.class.php  
+-  edit all links to be relative
+- use directly the $_SERVER['REQUEST_URI'] instead erasing "/myFrontController" in FrontController class constructor.
+
+		$request_uri=$_SERVER['REQUEST_URI'];
+        $this->relative_url=substr($request_uri, strpos($request_uri, '/', 1));
+		
+		replaced with:
+		
+		$this->relative_url=$_SERVER['REQUEST_URI'];
+		
+
+----------------------------------------------------------------------------------------------------------------------------------
+-----------------------  code Sniffers, Standards and Code Beautifier and Fixer  -----------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------
+
+I finally managed to have the code beautifier and fixer (phpcbf from squizlab) work. On Windows machines there is a problem with the --diff option, you need to
+specify  "--no-patch" http://stackoverflow.com/questions/24015486/fixing-psr2-errors-with-phpcbf-phar
+
+my command to fix the errors was:
+
+"path to phpcbf.bat"  "fix" "--no-ansi" "--verbose" "--dry-run" "--no-patch" "--format=xml" "--no-interaction" "--level=psr2" "--config=sf20" "C:\Program Files (x86)\EasyPHP-DevServer-14.1VC9\data\localweb\myFrontController"
+
+inside the file "phpcbf.bat" you may need to add manually the path to php.exe and to phpcbf (with no extension)
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------- PHP Documentor  -----------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------
+-Install via composer
+$ composer require "phpdocumentor/phpdocumentor:2.*"
+
+From official documentation http://www.phpdoc.org/docs/latest/guides/running-phpdocumentor.html :
+
+		When running phpDocumentor there are three command-line options that are essential:
+
+			-d, specifies the directory, or directories, of your project that you want to document.
+			-f, specifies a specific file, or files, in your project that you want to document.
+			-t, specifies the location where your documentation will be written (also called ‘target folder’).
+
+		The above options are all you need to generate your documentation as demonstrated in this example:
+
+		$ phpdoc -d path/to/my/project -f path/to/an/additional/file -t path/to/my/output/folder
+
+I executed first time  the command only with the first argument which saved me the results in   %USERPROFILE%\output\
+
+
+-------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------
 ----------------------  Changes in version 0.4  -------------------------------------
 -------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------
@@ -117,47 +184,7 @@ I will put in the form (edit_post_entry.php) a hidden field to store the post Id
 //I discovered a bug. Because I always replace spaces with hyphen, if a title is using hyphen it will be replaced with space
 when transforming it and cannot be found./////
 
-----------------------------------------------------------------------------------------------------------------------------------
------------------------  code Sniffers, Standards and Code Beautifier and Fixer  -----------------------------------------------
------------------------------------------------------------------------------------------------------------------------------------
 
-I finally managed to have the code beautifier and fixer (phpcbf from squizlab) work. On Windows machines there is a problem with the --diff option, you need to
-specify  "--no-patch" http://stackoverflow.com/questions/24015486/fixing-psr2-errors-with-phpcbf-phar
-
-my command to fix the errors was:
-
-"path to phpcbf.bat"  "fix" "--no-ansi" "--verbose" "--dry-run" "--no-patch" "--format=xml" "--no-interaction" "--level=psr2" "--config=sf20" "C:\Program Files (x86)\EasyPHP-DevServer-14.1VC9\data\localweb\myFrontController"
-
-inside the file "phpcbf.bat" you may need to add manually the path to php.exe and to phpcbf (with no extension)
-
----------------------------------------------------------------------------------------------------------------------------------------------------------
----------------------------------------- PHP Documentor  -----------------------------------------------------------------------------
-----------------------------------------------------------------------------------------------------------------------------------------
--Install via composer
-$ composer require "phpdocumentor/phpdocumentor:2.*"
-
-From official documentation http://www.phpdoc.org/docs/latest/guides/running-phpdocumentor.html :
-
-		When running phpDocumentor there are three command-line options that are essential:
-
-			-d, specifies the directory, or directories, of your project that you want to document.
-			-f, specifies a specific file, or files, in your project that you want to document.
-			-t, specifies the location where your documentation will be written (also called ‘target folder’).
-
-		The above options are all you need to generate your documentation as demonstrated in this example:
-
-		$ phpdoc -d path/to/my/project -f path/to/an/additional/file -t path/to/my/output/folder
-
-I executed first time  the command only with the first argument which saved me the results in   %USERPROFILE%\output\
-
-----------------------------------------------------------------------------------------------------------------------
-to do also: - admin dashboard, edit posts, delete posts, publish 
--tinyMCE
--uploading and storing photos
--modify database, add more fields
---- real slug generator!!!!!! the titles may contain forbidden characters possible solution:  http://code.google.com/p/php-slugs/
------- Controller too fat!! some stuff should be moved to View
------- Model should contain functions like selectPost, selectAllPosts, UpdatePost, DeletePost
 
 -------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------
