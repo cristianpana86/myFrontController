@@ -20,10 +20,9 @@ class FrontController
     private $param='';
     
     public function __construct()
-    {
-                        
-        $this->relative_url=$_SERVER['REQUEST_URI'];
-		        
+    {                  
+         $this->relative_url=htmlentities($_SERVER['REQUEST_URI'],ENT_QUOTES);
+     
     }
     
     /**

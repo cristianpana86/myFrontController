@@ -3,7 +3,7 @@ DirectoryIndex index.php
 <IfModule mod_rewrite.c>
     RewriteEngine On
 	#redirect all .php files request to index.php
-	RewriteRule ^(.*)\.php index.php [NC]
+	RewriteRule ^(.*)\.* index.php [NC]
 
   
 

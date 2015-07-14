@@ -13,6 +13,14 @@ to do also:
 - Controller too fat!! some stuff should be moved to View
 - Model should contain functions like selectPost, selectAllPosts, UpdatePost, DeletePost
 
+-------------------------------------------------------------------------------------
+------------------------------ Validation, filtering and escaping -------------------
+-------------------------------------------------------------------------------------
+
+- $_SERVER['REQUEST_URI'] - is coming from the user so it should be validated,filtered or escaped. I decided to use htmlspecialchar() - http://php.net/manual/en/function.htmlspecialchars.php
+
+
+
 --------------------------------------------------------------------------------------------------------------
 --------------------htaccess --------------------------------------------------------------------------------
 I checked and I could access the .php files found in base directory or in order subfolders,
@@ -20,6 +28,11 @@ I added to the .htaccess the following lines:
 	
 	#redirect all .php files request to index.php
 	RewriteRule ^(.*)\.php index.php [NC]
+
+Another edit:  I tried to access http://myFrontController/config/route.xml  and surprise it was displayed on screen. So now I decided to  
+redirect to index.php all file request, whatever extension they have
+
+		RewriteRule ^(.*)\.* index.php [NC]
 ---------------------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------------------
 ----------------- change the absolute paths to a relative path, use virtual host from EasyPHP-----------------
