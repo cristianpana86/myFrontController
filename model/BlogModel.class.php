@@ -7,6 +7,8 @@ class BlogModel
 {
 
     private $page_number=0;
+	private $page_older=0;
+	private $page_newer=0;
     private $per_page=0;
     
     public function __construct()
@@ -14,51 +16,72 @@ class BlogModel
     
         $path_to_xml=__DIR__ . '\\pagination.xml';
         $xml=simplexml_load_file($path_to_xml) or die("Error: Cannot create object");
-        $this->page_number = (integer)$xml->page_number;
+        //$this->page_number = (integer)$xml->page_number;
         $this->per_page =(integer) $xml->per_page;
+		$this->page_number=1;
+		$this->page_older=1;
+		$this->page_newer=2;
     }
     
-    
-    public function setPaginationInit()
-    {
-    
-        $path_to_xml=__DIR__ . '\\pagination.xml';
-        $xml=simplexml_load_file($path_to_xml) or die("Error: Cannot create object");
-        $xml->page_number=1;
-        $xml->asXML($path_to_xml);
-    
-    }
-    public function setPaginationOlder()
-    {
-    
-        
-        if($this->page_number <= 1) {
-            //nothing happens, the same page will be displayed
-        }else{
-            $path_to_xml=__DIR__ . '\\pagination.xml';
-            $xml=simplexml_load_file($path_to_xml) or die("Error: Cannot create object");
-            $xml->page_number=$this->page_number-1;
-            $xml->asXML($path_to_xml);
-        
-        }
-        
-    
-    }
-    public function setPaginationNewer()
-    {
-    
-        if($this->page_number >= 10) {
-            //nothing happens, the same page will be displayed
-        }else{
-            $path_to_xml=__DIR__ . '\\pagination.xml';
-            $xml=simplexml_load_file($path_to_xml) or die("Error: Cannot create object");
-            $xml->page_number=$this->page_number+1;
-            $xml->asXML($path_to_xml);
-            //echo "ar trebui sa fi scris valoarea asta " . ($this->page_number+1);
-        }
-    
-    }
-    
+	/**
+    * Set current page number from the requested URI, for ex /blog/4
+    *
+    * @param  integer setPageNumber
+    * @return void
+    */
+	public function setPageNumber($current_page)
+	{
+	    $db=new DBCon;
+		$totalPostsNo=$db->countBlogPosts();
+	    if ($current_page<=1){
+		
+	        $this->page_number=1;
+			
+		}else if ($current_page>=($totalPostsNo/$this->per_page)){
+		
+		    $this->page_number=$current_page;
+			$this->page_older=$current_page -1;
+			$this->page_newer=$current_page;
+		
+		}else{
+		
+		    $this->page_number=$current_page;
+			$this->page_older=$current_page -1;
+			$this->page_newer=$current_page +1;
+		}
+		
+	}
+    /**
+    * Get current page number from the requested URI, for ex /blog/4
+    *
+    * @param  void
+    * @return integer page_number
+    */
+	public function getPageNumber()
+	{
+        return $this->page_number;
+	} 
+	/**
+    * Get older page number
+    *
+    * @param  void
+    * @return integer page_number
+    */
+	public function getPageOlder()
+	{
+        return $this->page_older;
+	} 
+	/**
+    * Get newer page number number
+    *
+    * @param  void
+    * @return integer page_number
+    */
+	public function getPageNewer()
+	{
+        return $this->page_newer;
+	} 
+	
     /**
     * Connects to database and fetches all  posts headers only (not entire content)
     *

@@ -46,14 +46,15 @@
 	   <action>postOnBlog</action>
 	</route>
 	<route name="blog page older">
-		<path>/blog/older</path>
-	   <controllerClass>Blog</controllerClass>
-	   <action>renderOlder</action>
+	    <path>/blog/{number}</path>
+		<path_regexp>/\/blog\/[0-9]+$/i</path_regexp>
+	    <controllerClass>Blog</controllerClass>
+	    <action>renderPagination</action>
 	</route>
 	<route name="blog page newer">
-		<path>/blog/newer</path>
+		<path>/blog/{number}</path>
 	   <controllerClass>Blog</controllerClass>
-	   <action>renderNewer</action>
+	   <action>renderPagination</action>
 	</route>
 	<route name="individual blog post">
 		<path>/blog/post/{slug}</path>

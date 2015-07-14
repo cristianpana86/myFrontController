@@ -30,6 +30,42 @@ to do also:
 		
 		$this->relative_url=$_SERVER['REQUEST_URI'];
 		
+----------------------------------------------------------------------------------------------------------------------------------
+-----------------------  change pagination -----------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------
+Saving the current page on hard disk was a work around solution because at that moment I didn't had implemented URLs with parameters. 
+This work around is OK if there is just one user surfing on the page:), because if there are more than one, they will influencing
+what page the other ones is seeing, and that is just wrong.
+You can do a little test, open two tabs and navigate with Newer and Older buttons to see the issue.
+
+The regexp is '/\/blog\/[0-9]+$/i' . To avoid a partial match,I appended a $ to the end,  '+' means more than one digit
+
+The BlogModel has two new properties, $page_older and $page_newer which will be set after some verificat (should not be lower than 1 and bigger than
+total number of posts divided by posts per page($per_page)
+
+		public function setPageNumber($current_page)
+		{
+			$db=new DBCon;
+			$totalPostsNo=$db->countBlogPosts();
+			if ($current_page<=1){
+			
+				$this->page_number=1;
+				
+			}else if ($current_page>=($totalPostsNo/$this->per_page)){
+			
+				$this->page_number=$current_page;
+				$this->page_older=$current_page -1;
+				$this->page_newer=$current_page;
+			
+			}else{
+			
+				$this->page_number=$current_page;
+				$this->page_older=$current_page -1;
+				$this->page_newer=$current_page +1;
+			}
+			
+		}
+
 
 ----------------------------------------------------------------------------------------------------------------------------------
 -----------------------  code Sniffers, Standards and Code Beautifier and Fixer  -----------------------------------------------
