@@ -8,6 +8,7 @@ class DBCon
 
 
     public $db="";
+	
     /**
     * Create a DB connection
     * @copyright  2015 Cristian Pana 
@@ -70,7 +71,23 @@ class DBCon
             
     }
     
+    /**
+    * Fetches BlogPost pages from the database
+    * @copyright  2015 Cristian Pana 
+    * @param    void
+    * @return   integer $result  the total number of posts 
+    */
     
+    public function countBlogPosts()
+	{
+	    $sth=$this->db->prepare("SELECT count(*) FROM blogposts;");
+		$sth->execute();
+            
+        $result=$sth->fetchColumn();
+        $this->db=null;
+        return $result;
+	}
+	
     /**
     * Fetches BlogPost pages from the database
     * @copyright  2015 Cristian Pana 
@@ -96,7 +113,7 @@ class DBCon
         
         }else{
             $page_numb=($page_number-1)*$per_page;
-            echo $page_numb;
+            //echo $page_numb;
             $sth=$this->db->prepare("SELECT * FROM blogposts LIMIT :per_page OFFSET :page_number ;");
             $sth->bindParam(':per_page', $per_page, PDO::PARAM_INT);
             $sth->bindParam(':page_number', $page_numb, PDO::PARAM_INT);

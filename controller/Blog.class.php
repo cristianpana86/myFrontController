@@ -17,7 +17,7 @@ use CPANA\myFrontController\model\SlugGenerator;
 
 
 
-class Blog extends Page
+class Blog
 {
     
     
@@ -104,40 +104,34 @@ class Blog extends Page
         }
     }
     
+	/**
+    * This method is called when click the Blog link.
+    *
+    * @param  void
+    * @return void
+    */
+	public function renderBlogsInit()
+	{
+	    $this->renderPagination(1);
+	}
     /**
     * This method is used to render blogs when clicking Older link.
     *
     * @param  void
     * @return void
     */
-    public function renderOlder()
+    public function renderPagination($current_page)
     {
         
         $bm=new BlogModel();
-        $bm->setPaginationOlder();
-        
-        $this->render();
+		$bm->setPageNumber($current_page);
+         
+        $this->render($bm);
     
     
     }
     
-    /**
-    * This method is used to render blogs when clicking Newer link.
-    *
-    * @param  void
-    * @return void
-    */
-    public function renderNewer()
-    {
-        
-
-        $bm=new BlogModel();
-        $bm->setPaginationNewer();
-        
-        $this->render();
     
-    
-    }
     /**
     * This method is used to edit a blog post fr. The blog post slug is received as parameter
     *
@@ -257,21 +251,7 @@ class Blog extends Page
     
     }
     
-    /**
-    * This method is used to render blog posts when clicking Blog link.
-    *
-    * @param  void
-    * @return void
-    */
-    public function renderBlogsInit()
-    {
-        
-        $bm=new BlogModel();
-        $bm->setPaginationInit();
-        
-        $this->render();
-    
-    }
+
     
     /**
     * render method connects to the Database and renders posts from BlogPosts table using getBlogPosts method from class BlogModel
@@ -279,7 +259,7 @@ class Blog extends Page
     * @param  void
     * @return void
     */
-    public function render()
+    public function render(BlogModel $bm)
     {
     
             
@@ -288,7 +268,7 @@ class Blog extends Page
         // if the user Admin is logged, than menu_admin should be rendered. Also Edit buttons should appear next to each blog post
         if (LoginUser::validateLoginAdmin()) {
                 
-            $bm=new BlogModel();
+           
             $result = $bm->getBlogPostsHeaders();// this function returns first 1000 posts found in the table
             $new_content='<table  style="width:100%"><tr><th> Category  </th> <th> Author </th><td> Title </td><th></th><th></th></tr>';
             Render::$menu="templates\menu_admin.php";
@@ -306,13 +286,17 @@ class Blog extends Page
             }
             $new_content.= "<tr></table>";
             $new_content.= "</br></br></br>";
-            $new_content.="<a href=/blog/older>Older posts</a>&nbsp;&nbsp;&nbsp;<a href=/blog/newer>Newer posts</a> ";
+			
+			$older=$bm->getPageOlder();
+		    $newer=$bm->getPageNewer();
+			
+            $new_content.="<a href=/blog/{$older}>Older posts</a>&nbsp;&nbsp;&nbsp;<a href=/blog/{$newer}>Newer posts</a> ";
 
                 
         }else{
-                
-            $bm=new BlogModel();
-            $result = $bm->getBlogPosts();
+            //if a normal user is seeing the page (not Admin)   
+            
+			$result = $bm->getBlogPosts();
             $new_content="";
             foreach($result as $row){
                      
@@ -331,7 +315,12 @@ class Blog extends Page
                 $new_content.= "</br></br></br>";
             }
             $new_content.= "</table><br>";
-            $new_content.="<a href=/blog/older>Older posts</a>&nbsp;&nbsp;&nbsp;<a href=/myFrontController/blog/newer>Newer posts</a> ";
+			
+			$older=$bm->getPageOlder();
+		    $newer=$bm->getPageNewer();
+		
+			
+            $new_content.="<a href=/blog/{$older}>Older posts</a>&nbsp;&nbsp;&nbsp;<a href=/blog/{$newer}>Newer posts</a> ";
         }
         ////////////////
         Render::$content =$new_content;
@@ -345,7 +334,7 @@ class Blog extends Page
     public function renderPageNotFound()
     {
     
-          Render::$content ="Page not found!";
+        Render::$content ="Page not found!";
         Render::renderPage("user");
     
     }
