@@ -17,7 +17,7 @@ use CPANA\myFrontController\model\SlugGenerator;
 
 
 
-class Blog extends Page
+class Blog
 {
     
     

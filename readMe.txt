@@ -12,6 +12,14 @@ to do also:
 -modify database, add more fields
 - Controller too fat!! some stuff should be moved to View
 - Model should contain functions like selectPost, selectAllPosts, UpdatePost, DeletePost
+
+--------------------------------------------------------------------------------------------------------------
+--------------------htaccess --------------------------------------------------------------------------------
+I checked and I could access the .php files found in base directory or in order subfolders,
+I added to the .htaccess the following lines:
+	
+	#redirect all .php files request to index.php
+	RewriteRule ^(.*)\.php index.php [NC]
 ---------------------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------------------
 ----------------- change the absolute paths to a relative path, use virtual host from EasyPHP-----------------
