@@ -12,14 +12,18 @@ class DBCon
     /**
     * Create a DB connection
     * @copyright  2015 Cristian Pana 
-    * @param    no input params
-    * @return   PDO 
+    * @param    void
+    * @return   void 
     */
     public function __construct()
     {
-
-        $user='myblog';
-        $pass='password';
+   
+		$file=__DIR__ .'\\' . 'o3243fdgfd.php';
+		
+		if (file_exists($file)) {
+			include $file;
+        }else{ echo "Cannot connect to Database";}
+				
         try{
             //include connection details 
             $db_conn = new PDO('mysql:host=localhost;dbname=myblog', $user, $pass);

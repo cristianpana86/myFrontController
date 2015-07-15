@@ -13,16 +13,10 @@ to do also:
 - Controller too fat!! some stuff should be moved to View
 - Model should contain functions like selectPost, selectAllPosts, UpdatePost, DeletePost
 
--------------------------------------------------------------------------------------
------------------------------- Validation, filtering and escaping -------------------
--------------------------------------------------------------------------------------
-
-- $_SERVER['REQUEST_URI'] - is coming from the user so it should be validated,filtered or escaped. I decided to use htmlspecialchar() - http://php.net/manual/en/function.htmlspecialchars.php
-
-
-
 --------------------------------------------------------------------------------------------------------------
 --------------------htaccess --------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------
+
 I checked and I could access the .php files found in base directory or in order subfolders,
 I added to the .htaccess the following lines:
 	
@@ -33,7 +27,48 @@ Another edit:  I tried to access http://myFrontController/config/route.xml  and 
 redirect to index.php all file request, whatever extension they have
 
 		RewriteRule ^(.*)\.* index.php [NC]
----------------------------------------------------------------------------------------------------------------
+		
+		
+-------------------------------------------------------------------------------------
+------------------ SQL Injection ----------------------------------------------------
+-------------------------------------------------------------------------------------
+
+-What is mandatory however is the first setAttribute() line, which tells PDO to disable emulated prepared statements and use 
+real prepared statements. This makes sure the statement and the values aren't parsed by PHP before sending it to the MySQL 
+server (giving a possible attacker no chance to inject malicious SQL)."
+
+
+            $db_conn = new PDO('mysql:host=localhost;dbname=myblog', $user, $pass);           
+			$db_conn->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);        
+			$db_conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+			
+-------------------------------------------------------------------------------------
+------------------------------ Validation, filtering and escaping -------------------
+-------------------------------------------------------------------------------------
+
+- $_SERVER['REQUEST_URI'] - is coming from the user so it should be validated,filtered or escaped. I decided to use htmlspecialchar() - http://php.net/manual/en/function.htmlspecialchars.php
+
+
+
+-----------------------------------------------------------------------------------------------------------------
+---------------------Storing Database user and password somewhere safe... ---------------------------------------------
+-------------------------------------------------------------------------------------------------------------------
+
+As usually StackOverflow offers the answers: http://stackoverflow.com/questions/97984/how-to-secure-database-passwords-in-php
+
+From the list of answers I picked on the below option:
+ 
+If you're hosting on someone else's server and don't have access outside your webroot, you can always put your password and/or
+ database connection in a file and then lock the file using a .htaccess:
+
+ <files mypasswdfile>
+order allow,deny
+deny from all
+</files>
+
+ In the constructor of the DBCon class I include the file with random name "o3243fdgfd.php" which contains the user and pass for DB connection
+ As I am already denying access to any .php file I didn't added anything else to the .htaccess
+
 --------------------------------------------------------------------------------------------------------------
 ----------------- change the absolute paths to a relative path, use virtual host from EasyPHP-----------------
 --------------------------------------------------------------------------------------------------------------
