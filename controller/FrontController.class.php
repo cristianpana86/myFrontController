@@ -20,9 +20,18 @@ class FrontController
     private $param='';
     
     public function __construct()
-    {                  
-         $this->relative_url=htmlentities($_SERVER['REQUEST_URI'],ENT_QUOTES);
-     
+    {   
+	   /*
+	    if (0===preg_match("/(\<|\>|\s|\"|#|%|{|}|\||\\|\^|,|\.)/i", $_SERVER['REQUEST_URI'])){
+            $this->relative_url=$_SERVER['REQUEST_URI'];
+		}else{
+		    header('Location: /notfound');
+		}
+     */
+	 
+	 
+	 $this->relative_url=$_SERVER['REQUEST_URI'];
+	 //echo $this->relative_url;
     }
     
     /**

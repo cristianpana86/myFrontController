@@ -43,10 +43,17 @@ server (giving a possible attacker no chance to inject malicious SQL)."
 			$db_conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 			
 -------------------------------------------------------------------------------------
------------------------------- Validation, filtering and escaping -------------------
+------------------------------ Validating Form Input -------------------
 -------------------------------------------------------------------------------------
+- new class to store validation methods \validation\Valid.class.php 
+- use a regex to validate user or pass:  '/^[a-zA-Z0-9_-]{3,16}$/i'
+- use in Admin.class.php :
 
-- $_SERVER['REQUEST_URI'] - is coming from the user so it should be validated,filtered or escaped. I decided to use htmlspecialchar() - http://php.net/manual/en/function.htmlspecialchars.php
+	if (Validation::userAndPass($_POST['username'],$_POST['password'])) 
+
+If the input is not valid show Javascript pop up message and redirect to login page (I know, I am not checking to see if Javascript is enabled)
+	$message = "The entered value is not valid.";
+    echo "<script type='text/javascript'>alert('$message');window.location = '/admin';</script>";
 
 
 

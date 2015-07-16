@@ -4,6 +4,7 @@ namespace CPANA\myFrontController\controller;
 
 use CPANA\myFrontController\login\LoginUser;
 use CPANA\myFrontController\view\Render;
+use CPANA\myFrontController\validation\Validation;
 
 class Admin
 {
@@ -38,18 +39,27 @@ class Admin
         
             //if $_POST['username'] and $_POST['password'] exist try to login
             if(isset($_POST['username'])&isset($_POST['password'])) {
-                               
-                if(LoginUser::login($_POST['username'], $_POST['password'])) {
-                    
-                    
-                    header("Location: /admin/home");
-                    die();
-                }else{
-                    Render::$content="Wrong user or password";
-                    Render::renderPage("user");
-                    die();
-                }
-                
+			
+				//validate user input before using them
+                if (Validation::userAndPass($_POST['username'],$_POST['password'])) {
+                    if(LoginUser::login($_POST['username'], $_POST['password'])) {
+                                   
+                        header("Location: /admin/home");
+                        die();
+                    }else{
+                        Render::$content="Wrong user or password";
+                        Render::renderPage("user");
+                        die();
+                    }
+                } else {
+				
+				
+				    $message = "The entered value is not valid.";
+                    echo "<script type='text/javascript'>alert('$message');window.location = '/admin';</script>";
+					//header('Location: /admin');
+
+
+                }				
                 
             }else{
                 //get the correct path to the login.php template file

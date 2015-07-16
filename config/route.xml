@@ -5,6 +5,12 @@
 	   <action>render</action>
 	</route>
 	
+	<route name="page_not_found">
+       <path>/notfound</path>
+	   <controllerClass>Blog</controllerClass>
+	   <action>renderPageNotFound</action>
+	</route>
+	
 	<route name="blog page">
        <path>/blog</path>
 	   <controllerClass>Blog</controllerClass>
