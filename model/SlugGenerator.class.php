@@ -7,6 +7,7 @@ class SlugGenerator
     //source of this code is https://gist.github.com/anonymous/2912227
     public static function slugify($str) 
     {
+		$str=htmlentities($str);
         $search = array('?', '?', 's', 't', 'S', 'T', '?', '?', 'î', 'â', 'a', 'Î', 'Â', 'A', 'ë', 'Ë');
         $replace = array('s', 't', 's', 't', 's', 't', 's', 't', 'i', 'a', 'a', 'i', 'a', 'a', 'e', 'E');
         $str = str_ireplace($search, $replace, strtolower(trim($str)));

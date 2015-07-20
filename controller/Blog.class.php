@@ -6,6 +6,7 @@ use CPANA\myFrontController\model\BlogModel;
 use CPANA\myFrontController\view\Render;
 use CPANA\myFrontController\login\LoginUser;
 use CPANA\myFrontController\model\SlugGenerator;
+use CPANA\myFrontController\validation\Validation;
 
 /**
 * Blog class handles the behaviour of the "Blog" page
@@ -52,26 +53,32 @@ class Blog
     public function saveEditPost()
     {
     
-       
-        $bm=new BlogModel();
-        $rows_affected=$bm->updatePost((integer)$_POST['postID'], $_POST['Author'], $_POST['Category'], $_POST['ActualPost'], $_POST['Title']);
+        //first validate title, if title contains no letters it will be saved in the DB and cannot be accessed by slug (As slug will be empty)
+        if (Validation::titleValidation($_POST['Title']))
+		{
+            $bm=new BlogModel();
+            $rows_affected=$bm->updatePost((integer)$_POST['postID'], $_POST['Author'], $_POST['Category'], $_POST['ActualPost'], $_POST['Title']);
         
       
-        if($rows_affected==1) {
-            if (LoginUser::validateLoginAdmin()) { Render::$menu="templates\menu_admin.php"; 
+            if($rows_affected==1) {
+                if (LoginUser::validateLoginAdmin()) { Render::$menu="templates\menu_admin.php"; 
             }
             Render::$content="you have successfully updated the blog post!";
             Render::renderPage("user");
            
-        }else{
+            }else{
        
-            if (LoginUser::validateLoginAdmin()) { Render::$menu="templates\menu_admin.php"; 
-            }
+            if (LoginUser::validateLoginAdmin()) { Render::$menu="templates\menu_admin.php"; }
+            
             Render::$content= "bad luck, there was an error....";
             Render::renderPage("user");
-       
-           
-        }
+            }
+		}else{
+		
+		    $message = "The title is empty.";
+            echo "<script type='text/javascript'>alert('$message');window.location = '/admin/new-post';</script>";
+		
+		}
     }
     
     /**
@@ -82,18 +89,19 @@ class Blog
     */
     public function postOnBlog()
     {
-    
-       
-        $bm=new BlogModel();
-        $rows_affected=$bm->newPost($_POST['Author'], $_POST['Category'], $_POST['ActualPost'], $_POST['Title'], SlugGenerator::slugify($_POST['Title']));
+		//first validate title, if title contains no letters it will be saved in the DB and cannot be accessed by slug (As slug will be empty)
+        if (Validation::titleValidation($_POST['Title']))
+		{
+            $bm=new BlogModel();
+            $rows_affected=$bm->newPost($_POST['Author'], $_POST['Category'], $_POST['ActualPost'], $_POST['Title'], SlugGenerator::slugify($_POST['Title']));
       
-        if($rows_affected==1) {
-            if (LoginUser::validateLoginAdmin()) { Render::$menu="templates\menu_admin.php"; 
+            if($rows_affected==1) {
+                if (LoginUser::validateLoginAdmin()) { Render::$menu="templates\menu_admin.php"; 
             }
             Render::$content="you have successfully posted a new blog post!";
             Render::renderPage("user");
            
-        }else{
+            }else{
        
             if (LoginUser::validateLoginAdmin()) { Render::$menu="templates\menu_admin.php"; 
             }
@@ -101,8 +109,14 @@ class Blog
             Render::renderPage("user");
        
            
-        }
-    }
+            }
+        }else{
+		
+		     $message = "The title is empty.";
+            echo "<script type='text/javascript'>alert('$message');window.location = '/admin/new-post';</script>";
+		
+		}
+	}
     
 	/**
     * This method is called when click the Blog link.
@@ -133,7 +147,7 @@ class Blog
     
     
     /**
-    * This method is used to edit a blog post fr. The blog post slug is received as parameter
+    * This method is used to edit a blog post. The blog post slug is received as parameter
     *
     * @param  string $post_slug
     * @return void
@@ -237,7 +251,7 @@ class Blog
             $slug_from_title=  SlugGenerator::slugify($row['title']);
             $new_content.= "<tr><a href=/blog/post/$slug_from_title>".$row['title']."</a></tr></br>";
             $new_content.= "<tr> Post </tr> </br>";
-            $new_content.= "<tr>".$row['ActualPost']."</tr></br>";
+            $new_content.= "<tr>".html_entity_decode($row['ActualPost'])."</tr></br>";
             $new_content.= "</br></br></br>";
         }
         $new_content.= "</table><br>";
@@ -311,7 +325,7 @@ class Blog
                       
                 $new_content.= "<tr><a href=/blog/post/$slug_from_title>".$row['title']."</a></tr></br>";
                 $new_content.= "<tr> Post </tr> </br>";
-                $new_content.= "<tr>".$row['ActualPost']."</tr></br>";
+                $new_content.= "<tr>".html_entity_decode($row['ActualPost'])."</tr></br>";
                 $new_content.= "</br></br></br>";
             }
             $new_content.= "</table><br>";

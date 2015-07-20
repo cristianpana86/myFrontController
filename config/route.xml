@@ -1,86 +1,97 @@
 <route_base>
    <route name="home page">
        <path>/</path>
+	   <levelOfSecurity>all</levelOfSecurity>
 	   <controllerClass>Home</controllerClass>
 	   <action>render</action>
 	</route>
 	
 	<route name="page_not_found">
        <path>/notfound</path>
+	   <levelOfSecurity>all</levelOfSecurity>
 	   <controllerClass>Blog</controllerClass>
 	   <action>renderPageNotFound</action>
 	</route>
 	
 	<route name="blog page">
        <path>/blog</path>
+	   <levelOfSecurity>all</levelOfSecurity>
 	   <controllerClass>Blog</controllerClass>
 	   <action>renderBlogsInit</action>
 	</route>
 	
 	<route name="admin_login_page">
        <path>/admin</path>
-	   <controllerClass>Admin</controllerClass>
-	   <action>renderLogin</action>
-	</route>
-	
-	<route name="admin_login_page">
-       <path>/admin</path>
+	   <levelOfSecurity>all</levelOfSecurity>
 	   <controllerClass>Admin</controllerClass>
 	   <action>renderLogin</action>
 	</route>
 	
 	<route name="admin_home_page">
        <path>/admin/home</path>
+	   <levelOfSecurity>admin</levelOfSecurity>
 	   <controllerClass>Admin</controllerClass>
 	   <action>renderAdminHome</action>
 	</route>
 	
 	<route name="admin_new_post">
 		<path>/admin/new-post</path>
-	   <controllerClass>Blog</controllerClass>
-	   <action>new_post_entry</action>
+		<levelOfSecurity>admin</levelOfSecurity>
+	    <controllerClass>Blog</controllerClass>
+	    <action>new_post_entry</action>
 	</route>
 	
 	<route name="admin_log_out">
-		<path>/admin/logout</path>
+	   <path>/admin/logout</path>
+	   <levelOfSecurity>admin</levelOfSecurity>
 	   <controllerClass>Admin</controllerClass>
 	   <action>logOut</action>
 	</route>
 	<route name="admin_post_on_blog">
-		<path>/admin/postOnBlog</path>
+	   <path>/admin/postOnBlog</path>
+	   <levelOfSecurity>admin</levelOfSecurity>
 	   <controllerClass>Blog</controllerClass>
 	   <action>postOnBlog</action>
 	</route>
+	
 	<route name="blog page older">
 	    <path>/blog/{number}</path>
+		<levelOfSecurity>all</levelOfSecurity>
 		<path_regexp>/\/blog\/[0-9]+$/i</path_regexp>
 	    <controllerClass>Blog</controllerClass>
 	    <action>renderPagination</action>
 	</route>
+	
 	<route name="blog page newer">
 		<path>/blog/{number}</path>
+		<levelOfSecurity>all</levelOfSecurity>
 	   <controllerClass>Blog</controllerClass>
 	   <action>renderPagination</action>
 	</route>
 	<route name="individual blog post">
 		<path>/blog/post/{slug}</path>
+		<levelOfSecurity>all</levelOfSecurity>
 	    <path_regexp>/\/blog\/post\/[\w\-]+/i</path_regexp>
 	    <controllerClass>Blog</controllerClass>
 	    <action>renderPost</action>
 	</route>
+	
 	<route name="Edit individual blog post">
 		<path>/edit/post/{slug}</path>
+		<levelOfSecurity>admin</levelOfSecurity>
 	    <path_regexp>/\/edit\/post\/[\w\-]+/i</path_regexp>
 	    <controllerClass>Blog</controllerClass>
 	    <action>editPost</action>
 	</route>
 	<route name="Save edited post">
 		<path>/edit/save</path>
+		<levelOfSecurity>admin</levelOfSecurity>
 	    <controllerClass>Blog</controllerClass>
 	    <action>saveEditPost</action>
 	</route>
 	<route name="Delete individual blog post">
 		<path>/delete/post/{slug}</path>
+		<levelOfSecurity>admin</levelOfSecurity>
 	    <path_regexp>/\/delete\/post\/[\w\-]+/i</path_regexp>
 	    <controllerClass>Blog</controllerClass>
 	    <action>deletePost</action>

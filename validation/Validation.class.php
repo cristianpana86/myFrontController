@@ -52,11 +52,11 @@ class Validation
 	{
 	    $flag=false;
 		
-		if (preg_match(self::REGEX_PASS,$user)===1) {
+		if (preg_match(self::REGEX_PASS,$pass)===1) {
 		    $flag=true;
 		}
 				
-	    return array($flag,$error);
+	    return $flag;
 	}
 	
     /**
@@ -82,12 +82,17 @@ class Validation
     * @param     string $blogPost
     * @return    boolean flag
     */
-    public static function blogPostValidation($blogPost)
+    public static function titleValidation($title)
 	{
 	    $flag=false;
-		$error="";
 		
-	    return array($flag,$error);
+		if (isset($title)){
+		    if ((strlen($title)>3)and (strlen($title)<255)){
+		        $flag=true;
+		   }
+		}
+		
+	    return $flag;
 	}
 
 

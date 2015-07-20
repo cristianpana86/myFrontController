@@ -145,7 +145,7 @@ class BlogModel
     {
     
         $db=new DBCon();
-        $result=$db->newPost($Author, $Category, $Text, $Title, $Slug);
+        $result=$db->newPost(htmlentities($Author), htmlentities($Category), htmlentities($Text), htmlentities($Title), $Slug);
         
         return $result;
     }
@@ -161,7 +161,7 @@ class BlogModel
     {
     
         $db=new DBCon();
-        $result=$db->updatePost($PostID, $Author, $Category, $Text, $Title);
+        $result=$db->updatePost($PostID, htmlentities($Author), htmlentities($Category), htmlentities($Text), htmlentities($Title));
         
         return $result;
     }

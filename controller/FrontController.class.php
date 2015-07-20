@@ -1,6 +1,8 @@
 <?php
 namespace CPANA\myFrontController\controller;
 
+use CPANA\myFrontController\login\LoginUser;
+
 
 /**
 * FrontController  has one static function which calls specific object and method depending on the input from GET or POST
@@ -18,6 +20,7 @@ class FrontController
     private $controllerClass='';
     private $action='';
     private $param='';
+	private $levelOfSecurity='';
     
     public function __construct()
     {   
@@ -51,24 +54,22 @@ class FrontController
         
         foreach($xml->children() as $route){
         
-            if($route->path==$path) {
-                $this->controllerClass = $route->controllerClass;
+            if ($route->path==$path) {
+			    $this->controllerClass = $route->controllerClass;
                 $this->action = $route->action;
+				$this->levelOfSecurity=$route->levelOfSecurity;
                 return true;
+				
             }
-            else if($route->path_regexp!="") {    //if the route contains a path_regexp verify if it matches the requested route
-                
-                if(preg_match($route->path_regexp, $path)) {  
-                       
+			elseif($route->path_regexp!="") {    //if the route contains a path_regexp verify if it matches the requested route
+                if(preg_match($route->path_regexp, $path)) {   
                     $this->controllerClass = $route->controllerClass;
                     $this->action = $route->action;
+					$this->levelOfSecurity=$route->levelOfSecurity;
                     // from a path like /blog/post/{slug} found in route.xml this line of code extracts blog/post/
                     $path_without_slug=substr($route->path, 1, strpos($route->path, "{")-1);
-                      //extract the parameter (post name) from path like "/blog/post/{slug}" - this should be implemented in a more general way
-                    //$this->param=substr($path,strlen('blog/posts/')); -old code
-                    $this->param=substr($path, strlen($path_without_slug)+1);//this is the more generalized implementation mentioned above
-                        
-                    return true;
+                    $this->param=substr($path, strlen($path_without_slug)+1);
+					return true;
                 }
             }
             
@@ -93,21 +94,34 @@ class FrontController
         /**
         *  call controller class with the name name as the 'controller' and method with the same name as 'action'
         */ 
-        if($this->findPath($this->relative_url)) {    
+        if($this->findPath($this->relative_url)) { 
+		    
+			/**
+            *  if the paths exists, than check if access is allowed depending on the level of security
+            */ 
+            if (LoginUser::accessAllowed($this->levelOfSecurity)) {		
             
-            //handles differently uri with parameter and those without parameters
-            if($this->param!='') {
-            
-                $class_name=__NAMESPACE__ . '\\'. $this->controllerClass;
-                $func=(string)$this->action;
+				//handles differently uri with parameter and those without parameters
+				if($this->param!='') {
+				
+					$class_name=__NAMESPACE__ . '\\'. $this->controllerClass;
+					$func=(string)$this->action;
+					$obj= new $class_name();
+					$obj->$func($this->param);
+				}else{
+					$class_name=__NAMESPACE__ . '\\'. $this->controllerClass;
+					$func=(string)$this->action;
+					$obj= new $class_name();
+					$obj->$func();
+				}
+			}else {
+			    //call specific class to handle access not allowed message
+                $class_name=__NAMESPACE__ . '\\'. "AccessDenied";
+                
                 $obj= new $class_name();
-                $obj->$func($this->param);
-            }else{
-                $class_name=__NAMESPACE__ . '\\'. $this->controllerClass;
-                $func=(string)$this->action;
-                $obj= new $class_name();
-                $obj->$func();
-            }
+                $obj->render();
+								
+			}
         }else{
             //call specific class to handle 404 messages
             $class_name=__NAMESPACE__ . '\\'. "PageNotFound";
@@ -116,6 +130,7 @@ class FrontController
             $obj->render();
         
         }
+		
             
            
                 

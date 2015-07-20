@@ -60,6 +60,7 @@ class LoginUser
             
         }
     }
+	
     public static function validateLoginAdmin()
     {
     
@@ -81,6 +82,25 @@ class LoginUser
         
             
     }
+	/**
+    * Checks if a path needs authentication or if access for all is allowed. If level of security<>all than ValidateLoginAdmin is called.
+	*In future more levels of security could be added.
+	*
+    * @param   string $levelOfSecurity - stored in router
+    * @return   boolean $flag
+    */
+	public static function accessAllowed($levelOfSecurity)
+	{  
+	    $flag=false;
+		if ($levelOfSecurity=='all') {
+		    $flag=true;
+			return $flag;
+		}else {
+		    $flag=self::ValidateLoginAdmin();
+			return $flag;
+		}
+		
+	}
     
 
 }

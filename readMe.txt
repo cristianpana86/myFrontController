@@ -6,12 +6,53 @@
 -------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------
 to do also: 
--validate input
--tinyMCE
--uploading and storing photos
+-validate input -done 
+-tinyMCE- done
 -modify database, add more fields
 - Controller too fat!! some stuff should be moved to View
 - Model should contain functions like selectPost, selectAllPosts, UpdatePost, DeletePost
+---------------------------------------
+I should organize code like this:
+- data validation in controller
+- user privileges verification in FrontController?? (unique point) - at this moment there are some pages with should be seen only
+by admin but knowing the link you can also access them: http://myfrontcontroller/admin/new-post
+- data escaping in model 
+
+
+-------------------------------------------------------------------------------------
+---------  Trying to fix security problem  -----------------------------------------: 
+-------------------------------------------------------------------------------------
+Problem:
+Links like http://myfrontcontroller/admin/new-post can be accessed without being logged in.
+An unwanted intruder can post something like "I hacked your site!"
+This project was from the beginning developed with the scope of learning and discovering the issues which generated the need for 
+different architectural patterns and design solutions used nowadays. I am not implementing a  MVC application from experience, I am
+discovering how to do one by upgrading existing code. I will not implement an Access Control List but I would want to have unique
+point where all requests are verified.
+Implementation: 
+I added in router.xml a new field called "levelOfSecurity". If the value of this filed is "all" accessing a certain page does not 
+require authentication. If "levelOfSecurity" is set to "admin" than a verification is made.
+
+A new static method was added to LoginUser class:
+
+   public static function accessAllowed($levelOfSecurity)
+	{  
+	    $flag=false;
+	    if ($levelOfSecurity=='all') {
+		    $flag=true;
+			return $flag;
+		}else {
+		    $flag=self::ValidateLoginAdmin();
+			return $flag;
+		}
+		
+	}
+
+In FrontController::findPath() method after checking if a path exists also it is verified the access authorisation:
+
+if (($route->path==$path) {
+    if (LoginUser::accessAllowed($route->levelOfSecurity))) 
+
 
 --------------------------------------------------------------------------------------------------------------
 --------------------htaccess --------------------------------------------------------------------------------
@@ -43,10 +84,10 @@ server (giving a possible attacker no chance to inject malicious SQL)."
 			$db_conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 			
 -------------------------------------------------------------------------------------
------------------------------- Validating Form Input -------------------
+------------------------------ Validating and escaping  input data -------------------
 -------------------------------------------------------------------------------------
 - new class to store validation methods \validation\Valid.class.php 
-- use a regex to validate user or pass:  '/^[a-zA-Z0-9_-]{3,16}$/i'
+- use a regex to validate user or pass:  '/^[a-zA-Z0-9_-]{3,16}$/i' (white list validation). A resource for validation regex: https://www.owasp.org/index.php/OWASP_Validation_Regex_Repository
 - use in Admin.class.php :
 
 	if (Validation::userAndPass($_POST['username'],$_POST['password'])) 
@@ -56,7 +97,18 @@ If the input is not valid show Javascript pop up message and redirect to login p
     echo "<script type='text/javascript'>alert('$message');window.location = '/admin';</script>";
 
 
+I've read about the filter_var() function from PHP and the types of filters available and I feel this regex is doing just fine for the job.
+More on this :  http://code.tutsplus.com/tutorials/getting-clean-with-php--net-6732
+---------------------------------------------------------------------------------------------------------
+The other places where data enters in the application are the new entry post/edit post form. I will apply "htmlentities()" function
+before saving them on the Database.
+-in BlogModel::newPost and BlogModel::updatePost I apply htmlentities()
+  $result=$db->newPost(htmlentities($Author), htmlentities($Category), htmlentities($Text), htmlentities($Title), $Slug)
 
+- in Blog::renderPost I decode the content of the post:
+
+$new_content.= "<tr>".html_entity_decode($row['ActualPost'])."</tr></br>";
+ 
 -----------------------------------------------------------------------------------------------------------------
 ---------------------Storing Database user and password somewhere safe... ---------------------------------------------
 -------------------------------------------------------------------------------------------------------------------
@@ -75,9 +127,30 @@ deny from all
 
  In the constructor of the DBCon class I include the file with random name "o3243fdgfd.php" which contains the user and pass for DB connection
  As I am already denying access to any .php file I didn't added anything else to the .htaccess
+----------------------------------------------------------------------------------------------------------------------
+--------------------- TinyMCE integration ----------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------
+TinyMCE is a platform independent web based Javascript HTML WYSIWYG editor control released as Open Source under LGPL.
+TinyMCE has the ability to convert HTML TEXTAREA fields or other HTML elements to editor instances.
+
+
+Inserted this code in the <head> of the \template\main_template.php file. As you can see I am using TinyMCE from a CDN.
+
+	<script type="text/javascript" src="//tinymce.cachefly.net/4.0/tinymce.min.js"></script>
+	<script type="text/javascript">
+	   tinymce.init({
+	   
+		   selector: "textarea",
+	   plugins: [
+		   "advlist autolink lists link image charmap print preview anchor",
+		   "searchreplace visualblocks code fullscreen",
+		  "insertdatetime media table contextmenu paste "
+		],
+		toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter      alignright alignjustify | bullist numlist outdent indent | link image"
+	});
 
 --------------------------------------------------------------------------------------------------------------
------------------ change the absolute paths to a relative path, use virtual host from EasyPHP-----------------
+----------------- change the absolute paths to a relative path, use virtual host -----------------
 --------------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------------
 -install the module Virtual Host Manager from: http://www.easyphp.org/save-module-virtualhostsmanager-vc9-latest.php
